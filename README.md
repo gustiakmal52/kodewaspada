@@ -186,7 +186,7 @@ Useful contributions include:
 
 Read [CONTRIBUTING.md](CONTRIBUTING.md) before submitting changes.
 
-For discussion, see the open feedback issue: [real-world AppSec review cases](../../issues/1).
+For discussion, see the open feedback issue: [real-world AppSec review cases](https://github.com/gustiakmal52/kodewaspada/issues/1).
 
 If KodeWaspada improves your security-review workflow, consider **starring the repository** so other developers can find it.
 
