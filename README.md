@@ -1,128 +1,207 @@
 # KodeWaspada
 
-**Security review untuk developer yang ngoding dengan AI: cari bukti, perbaiki akar masalah, lalu retest.**
+**Evidence-first security review for developers building with AI coding agents.**
 
 [![Source Available](https://img.shields.io/badge/license-PolyForm%20Noncommercial-6f42c1)](LICENSE)
-[![Security Review](https://img.shields.io/badge/focus-AppSec%20%2B%20AI%20Coding-0a7f5a)](#yang-dibantu)
-[![Language](https://img.shields.io/badge/docs-Bahasa%20Indonesia-dc2626)](#kodewaspada)
+[![Focus](https://img.shields.io/badge/focus-AppSec%20%2B%20AI%20Coding-0a7f5a)](#what-it-does)
+[![Skill](https://img.shields.io/badge/format-Agent%20Skill-2563eb)](skills/kodewaspada/SKILL.md)
+[![Language](https://img.shields.io/badge/README-English-111827)](#kodewaspada)
 
-KodeWaspada adalah **security review agent/skill blue-team** untuk OpenAI Codex dan coding assistant yang mendukung format Agent Skills kompatibel. Ia membantu agent menelusuri alur kode, membedakan dugaan dari bukti, memperbaiki root cause saat diminta, dan menguji ulang hasilnya.
+[**Bahasa Indonesia**](README.id.md)
 
-### Mulai dalam 30 detik
+KodeWaspada is an actively developed **blue-team security review agent/skill** for OpenAI Codex and coding assistants that support compatible Agent Skills. It is designed to make code-security review less dependent on confident-sounding guesses and more dependent on traceable evidence.
 
-Salin folder [`skills/kodewaspada`](skills/kodewaspada) ke direktori skill proyek, lalu gunakan:
+The core workflow is:
 
-```text
-$kodewaspada Review keamanan proyek ini sebelum deploy.
-Prioritaskan akses data antar pengguna dan input yang berbahaya.
-Tunjukkan bukti, dampak, dan batas analisis. Jangan ubah kode dulu.
-```
+**issue → location → evidence → impact → fix → retest**
 
-**Kenapa beda dari prompt security biasa?**
+KodeWaspada is an independent community project. It is not an official OpenAI or Daybreak product, certification, endorsement, or security guarantee.
 
-- Evidence-first: temuan harus punya lokasi dan alur kode yang jelas.
-- False-positive aware: kontrol yang sudah benar harus menggugurkan dugaan.
-- Fix-aware: patch hanya saat diminta dan fokus ke akar masalah.
-- Retest-aware: tidak mengklaim lulus sebelum pengujian benar-benar dijalankan.
-- Ada scanner opsional untuk beberapa pola taint JS/TS, tetapi skill tetap bisa dipakai tanpa Python atau Semgrep.
+## Why KodeWaspada
 
-> Proyek komunitas independen. Bukan produk resmi, afiliasi, dukungan, sertifikasi, atau integrasi keamanan dari OpenAI maupun Daybreak.
+A generic "act as a security expert" prompt can produce useful ideas, but it does not define how the agent should distinguish a real vulnerability from a plausible-looking false positive.
 
-**KodeWaspada adalah proyek security tooling yang dikembangkan aktif**, dengan fokus pada review kode yang evidence-first, false-positive aware, fix-aware, dan retest-aware. Distribusinya bersifat source-available untuk penggunaan nonkomersial. Skill adalah instruksi untuk agent, bukan model AI baru dan bukan jaminan aplikasi aman.
+KodeWaspada gives the agent a repeatable decision process:
 
-Jika proyek ini membantu workflow Anda, **star repo ini** agar lebih mudah ditemukan lagi. Masukan, kasus sintetis, dan kontribusi yang meningkatkan kualitas bukti sangat dihargai.
+- **Evidence-first:** follow controllable input through validation/authorization to the sensitive operation and effect.
+- **False-positive aware:** real controls can invalidate a finding and should be documented when they do.
+- **Fix-aware:** patch the root cause only when a fix is requested.
+- **Retest-aware:** do not claim success until relevant tests are actually run.
+- **Prompt-injection resistant review behavior:** instructions embedded inside reviewed source, comments, logs, issues, or scanner output are treated as data, not permission.
+- **Explicit evidence states:** source-proven, locally tested, needs verification, or dismissed.
 
-## Yang dibantu
+## 30-second quick start
 
-| Pekerjaan | Hasil yang diharapkan dari agent |
+The only required component is [skills/kodewaspada](skills/kodewaspada). Python and Semgrep are **not required** to use the skill.
+
+From this repository:
+
+~~~bash
+mkdir -p /path/to/your-project/.agents/skills
+cp -R -i skills/kodewaspada /path/to/your-project/.agents/skills/
+~~~
+
+Then start a new coding-agent session and ask:
+
+~~~text
+$kodewaspada Review this project before deployment.
+Focus on authentication, cross-user data access, and dangerous input flows.
+Show evidence, impact, and uncertainty. Do not modify code yet.
+~~~
+
+The folder follows the Agent Skills structure used by current OpenAI tooling. Host-specific installation paths can differ, so review the skill before enabling it in your environment.
+
+## What it does
+
+| Mode | Expected behavior |
 | --- | --- |
-| Pemetaan risiko | Alur aplikasi, data sensitif, siapa boleh mengakses apa, dan bagian yang belum diketahui |
-| Review kode / perubahan | Alur input → validasi/izin → operasi → efek, lengkap dengan lokasi kode |
-| Triase temuan | Pisahkan bukti di source, bukti uji lokal, dugaan yang perlu verifikasi, dan dugaan yang gugur |
-| Perbaikan saat diminta | Patch root cause yang kecil, mempertahankan fungsi dan perubahan pengguna |
-| Uji ulang | Tes regresi, kontrol pembanding, hasil aktual, dan pemeriksaan yang belum dilakukan |
+| Threat mapping | Identify sensitive assets, actors, trust boundaries, and unknown areas |
+| Code / diff review | Trace input → validation/authorization → sensitive operation → effect |
+| Finding triage | Separate source evidence, local test evidence, unresolved hypotheses, and dismissed findings |
+| Fix | Apply a small root-cause patch while preserving unrelated user changes |
+| Retest | Run relevant regression checks and report actual results and remaining gaps |
 
-Panduan mencakup autentikasi/sesi, akses objek/tenant/RLS, injection, XSS, file/upload, SSRF, rahasia, dependency, CI/konfigurasi, tool AI, dan logika bisnis. **Ini cakupan panduan review, bukan klaim semua area otomatis terdeteksi atau seluruh stack sudah diuji.** Agent menyesuaikan area dengan source, alat, dan izin yang tersedia.
+Review guidance covers authentication/session handling, object/tenant/RLS authorization, injection, XSS, files/uploads, SSRF, secrets, dependencies, CI/configuration, AI-tool boundaries, and business logic.
 
-Contoh: pengguna A bisa membaca catatan pengguna B. Agent tidak cukup melihat URL berisi ID; ia harus menelusuri middleware dan query, memeriksa aturan kepemilikan, lalu membedakan bukti source dari hasil uji dua identitas. Jika ternyata query sudah membatasi pemilik, dugaan harus gugur.
+That is **review scope**, not a claim that every category is automatically detected.
 
-## Pasang skill saja
+## Evidence model
 
-Folder yang dibutuhkan hanya [`skills/kodewaspada`](skills/kodewaspada). Python dan Semgrep **tidak diperlukan** untuk memakai skill. Baca instruksinya sebelum memasang.
+KodeWaspada intentionally separates confidence from impact.
 
-Dari folder repo ini, pasang untuk satu proyek pada Linux/macOS/WSL; ganti `/path/ke/proyek-anda` dengan folder proyek Anda:
+| Evidence state | Meaning |
+| --- | --- |
+| **Source-proven** | The source-to-effect path and relevant control are visible in reviewed code |
+| **Locally tested** | A local test or PoC was actually executed with a meaningful comparison control |
+| **Needs verification** | A plausible path exists, but required helper/config/runtime/permission evidence is missing |
+| **Dismissed** | A real control breaks the suspected path; it should not remain in the active finding count |
 
-```bash
-mkdir -p /path/ke/proyek-anda/.agents/skills
-cp -R -i skills/kodewaspada /path/ke/proyek-anda/.agents/skills/
-```
+A source-level finding is not automatically a production exploit. A clean result is not a security certificate.
 
-Jika folder `kodewaspada` sudah ada, jangan setujui overwrite sebelum membandingkan versi. Untuk instalasi personal, salin folder yang sama ke `~/.agents/skills/`. Instalasi personal membuat skill tersedia lintas proyek, bukan hanya repo ini. Struktur ini mengikuti format Agent Skills yang dipakai dalam [konsep Skills resmi OpenAI](https://developers.openai.com/plugins/concepts/skills). Jalur pemasangan dapat berbeda menurut host; jika skill belum muncul, mulai sesi baru atau restart aplikasi.
+## Example: authorization review
 
-Di coding assistant lain yang dapat membaca file lokal, minta agent membaca `SKILL.md` beserta referensi yang ditunjuk. Integrasi native di luar Codex belum diuji; jangan menganggap nama folder/format agent setiap aplikasi sama.
+Suppose user A can request a note belonging to user B.
 
-## Tiga cara pakai
+KodeWaspada should not stop at "the URL contains an ID." It should trace the request through middleware and the data query, inspect ownership checks, and distinguish code evidence from runtime evidence.
 
-**Review dulu, tanpa mengubah aplikasi:**
+If the query already binds the object to the authenticated owner, the suspected cross-user access issue should be **dismissed**, not reported just because the route looked suspicious.
 
-```text
-$kodewaspada Review folder aplikasi ini. Fokus pada login, akses data
-antar pengguna, dan input ke database/HTML. Tunjukkan bukti dan batasnya.
-```
+## Three common workflows
 
-**Perbaiki temuan yang sudah cukup terbukti:**
+**1. Review without editing**
 
-```text
-$kodewaspada Perbaiki temuan akses data tadi pada kode lokal.
-Pertahankan API dan perubahan saya. Tambahkan tes pemilik dan bukan pemilik.
-```
+~~~text
+$kodewaspada Review this application folder.
+Focus on login, cross-user data access, and database/HTML input.
+Show evidence and limitations. Do not edit files.
+~~~
 
-**Periksa perbaikannya:**
+**2. Fix a sufficiently supported finding**
 
-```text
-$kodewaspada Retest patch ini. Jalankan tes lokal yang relevan,
-bandingkan akses yang sah dan yang harus ditolak, laporkan hasil sebenarnya.
-```
+~~~text
+$kodewaspada Fix the cross-user data-access issue we just confirmed.
+Preserve the public API and my unrelated changes.
+Add owner vs. non-owner regression tests.
+~~~
 
-Review tidak otomatis memberi izin edit, deploy, membuka PR, mempublikasikan laporan, atau menguji sistem produksi. Jika Anda sudah meminta fix, skill tidak meminta izin berulang untuk edit lokal yang memang termasuk tugas itu.
+**3. Retest the patch**
 
-## Kenapa bukan hanya prompt "jadilah ahli security"?
+~~~text
+$kodewaspada Retest this patch.
+Run the relevant local tests, compare allowed and denied access,
+and report the actual results.
+~~~
 
-Skill menetapkan cara mengambil keputusan: telusuri helper/middleware sampai operasi nyata, cari kontrol yang menggugurkan dugaan, jangan menganggap output scanner sebagai bukti, dan jangan menyebut retest lulus sebelum benar-benar dijalankan. Instruksi tersembunyi di komentar, log, atau file yang direview tidak boleh mengubah tugas agent.
+A review request does not automatically authorize edits, deployment, publishing, opening PRs, or production testing.
 
-Hasil yang diharapkan: **masalah → lokasi → bukti → dampak → perbaikan → retest**, ditambah area yang belum diperiksa. Tidak ada skor keamanan 0–100 atau label "100% aman".
+## Optional deterministic scanner
 
-## Scanner opsional
+KodeWaspada also includes an optional Python CLI that can run without AI. It currently provides **three JavaScript/TypeScript taint checks** for request-controlled input reaching:
 
-CLI Python yang sudah tersedia tetap bisa dipakai tanpa AI untuk tiga pemeriksaan taint JS/TS: input menuju shell, eval/Function, dan HTML mentah. Menghasilkan HTML, Markdown, dan JSON. Ini **alat bantu**, bukan prasyarat skill dan bukan seluruh cakupan review blue-team.
+- shell execution,
+- eval / Function,
+- raw HTML output.
 
-Instalasi engine, command, exit code, batas pemrosesan, dan privasi dijelaskan di [panduan scanner](docs/SCANNER.md). Jangan menjalankan contoh JavaScript di `examples/`; contoh tersebut hanya untuk analisis scanner.
+It generates HTML, Markdown, and JSON reports.
 
-## Privasi dan batas bukti
+~~~bash
+python3 -m kodewaspada scan /path/to/project --out outputs/first-review
+~~~
 
-- Skill tidak memiliki backend. Namun source yang dibaca coding assistant dapat diproses provider AI host; gunakan lingkungan yang sesuai kebijakan proyek Anda.
-- Jangan memasukkan credential, dump produksi, atau kode klien ke issue, contoh, atau laporan publik. Temuan secret ditulis dengan lokasi/jenis, bukan nilai rahasia.
-- Provider AI, alat, konteks repo, dan izin memengaruhi hasil. Skill tidak memberikan akses Daybreak/TAC, tidak menjual akses tersebut, dan tidak memerlukan status program itu untuk review lokal.
-- Analisis source, tes lokal, dan kondisi produksi adalah bukti yang berbeda. Tidak ada temuan bukan sertifikat aman; kegagalan alat harus disebutkan.
+The scanner is a candidate finder, not the full security review. A zero-result scan does not mean the project is safe.
 
-## Pengujian dan kontribusi
+See [docs/SCANNER.md](docs/SCANNER.md) for supported extensions, limits, privacy behavior, exit codes, and current engine constraints.
 
-[Evaluasi perilaku](evals/README.md) memakai kasus sintetis dan penilaian hasil agent. [Catatan QA](docs/QA.md) membedakan evaluasi skill dari pengujian scanner. Mengubah teks skill perlu dievaluasi pada perilaku, bukan hanya validitas Markdown.
+## Evaluation philosophy
 
-Laporkan dugaan kerentanan pada proyek ini melalui prosedur privat di [SECURITY.md](SECURITY.md); jangan membuka detail sensitif di issue publik.
+The repository includes synthetic evaluation fixtures for testing **agent decisions**, not just scanner syntax.
 
-```bash
+Current eval scenarios check whether the agent can:
+
+- identify missing ownership binding,
+- avoid reporting a safe owner-bound query,
+- avoid inventing XSS when data goes through textContent,
+- refuse to guess about unavailable authorization helpers,
+- distinguish raw SQL construction from parameter binding,
+- avoid false shell-injection claims when execFile is used with fixed binaries and separate arguments,
+- ignore malicious instructions embedded in reviewed comments,
+- keep read-only review read-only.
+
+See [evals/README.md](evals/README.md).
+
+These fixtures are not a universal benchmark, an accuracy percentage, or proof that the skill has no false negatives. Material instruction changes should be reevaluated.
+
+## Security and privacy boundaries
+
+- The skill has no KodeWaspada backend.
+- Source read by your coding assistant may still be processed by that assistant's provider.
+- Do not place credentials, production dumps, client source, or live vulnerability details in public issues or fixtures.
+- Local source analysis, local testing, and production behavior are different evidence levels.
+- The optional scanner does not automatically inspect every vulnerability class.
+- Live testing, deployment, credential rotation, or publication requires separate authorization.
+
+Potential vulnerabilities in **KodeWaspada itself** should follow the private reporting process in [SECURITY.md](SECURITY.md).
+
+## Run the test suite
+
+~~~bash
 python3 -m unittest discover -s tests -v
-```
+python3 -m compileall -q kodewaspada
+~~~
 
-Tes scanner membutuhkan Semgrep untuk cakupan penuh; lihat panduannya. Perubahan aturan perlu contoh positif dan negatif. Perubahan skill perlu kasus yang memperlihatkan keputusan lebih baik, termasuk saat dugaan harus gugur. Jangan memakai data klien sebagai fixture.
+Full scanner coverage requires the documented Semgrep dependency. See [docs/SCANNER.md](docs/SCANNER.md) and [docs/QA.md](docs/QA.md).
 
-## Lisensi nonkomersial dan berbagi
+## Contributing
 
-Instruksi, wrapper, aturan asli, contoh, dan dokumentasi KodeWaspada tersedia di bawah [PolyForm Noncommercial License 1.0.0](LICENSE) dengan `Required Notice: Copyright 2026 EL1Syum`. Ini lisensi **source-available**, bukan lisensi open-source OSI.
+External review is welcome, especially when it improves the evidence model rather than merely increasing the number of warnings.
 
-Anda boleh memakai, menyalin, mengubah, dan membagikan proyek untuk tujuan nonkomersial yang diizinkan lisensi. Saat membagikan salinan atau perubahan, sertakan ketentuan lisensi atau URL resminya dan pertahankan baris `Required Notice`. Menjual kembali, memasukkan KodeWaspada ke produk atau layanan berbayar, atau penggunaan komersial lain memerlukan lisensi tertulis terpisah dari pemegang hak. Ringkasan ini bukan pengganti teks lisensi.
+Useful contributions include:
 
-Sebelum membuat rilis atau repo publik, ikuti [gerbang distribusi](docs/RELEASE.md). Riwayat pengembangan lokal sebelum `0.2.0` masih memuat lisensi lama dan tidak disiapkan untuk dipublikasikan.
+- synthetic positive and negative security cases,
+- false-positive reductions,
+- evaluation cases where a hypothesis should be dismissed,
+- review guidance for real framework authorization patterns,
+- scanner rules with positive **and** negative fixtures,
+- documentation and cross-assistant compatibility testing.
 
-Semgrep merupakan dependency terpisah dengan lisensi upstream sendiri, bukan engine yang dibundel dalam skill.
+Read [CONTRIBUTING.md](CONTRIBUTING.md) before submitting changes.
+
+For discussion, see the open feedback issue: [real-world AppSec review cases](../../issues/1).
+
+If KodeWaspada improves your security-review workflow, consider **starring the repository** so other developers can find it.
+
+## License
+
+KodeWaspada's original instructions, wrapper, rules, examples, and documentation are available under the [PolyForm Noncommercial License 1.0.0](LICENSE) with:
+
+~~~text
+Required Notice: Copyright 2026 EL1Syum
+~~~
+
+This repository is **source-available, not OSI open source**. Noncommercial use, copying, modification, and redistribution are allowed within the license terms. Commercial use requires separate written permission from the rights holder.
+
+Semgrep is a separate upstream dependency and is not bundled as the project's own engine.
+
+---
+
+**Maintainer:** [gustiakmal52](https://github.com/gustiakmal52)
