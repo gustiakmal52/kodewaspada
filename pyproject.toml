@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "kodewaspada"
 version = "0.2.0"
-description = "Pendamping review keamanan kode JavaScript/TypeScript berbahasa Indonesia"
+description = "Evidence-first security review agent and optional JavaScript/TypeScript taint scanner"
 requires-python = ">=3.10"
 license = "LicenseRef-PolyForm-Noncommercial-1.0.0"
 license-files = ["LICENSE"]
