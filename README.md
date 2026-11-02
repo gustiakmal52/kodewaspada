@@ -6,7 +6,7 @@
 [![Security Review](https://img.shields.io/badge/focus-AppSec%20%2B%20AI%20Coding-0a7f5a)](#yang-dibantu)
 [![Language](https://img.shields.io/badge/docs-Bahasa%20Indonesia-dc2626)](#kodewaspada)
 
-KodeWaspada adalah **Agent Skill blue-team** untuk OpenAI Codex dan coding assistant yang mendukung format Agent Skills kompatibel. Ia membantu agent menelusuri alur kode, membedakan dugaan dari bukti, memperbaiki root cause saat diminta, dan menguji ulang hasilnya.
+KodeWaspada adalah **security review agent/skill blue-team** untuk OpenAI Codex dan coding assistant yang mendukung format Agent Skills kompatibel. Ia membantu agent menelusuri alur kode, membedakan dugaan dari bukti, memperbaiki root cause saat diminta, dan menguji ulang hasilnya.
 
 ### Mulai dalam 30 detik
 
@@ -28,7 +28,7 @@ Tunjukkan bukti, dampak, dan batas analisis. Jangan ubah kode dulu.
 
 > Proyek komunitas independen. Bukan produk resmi, afiliasi, dukungan, sertifikasi, atau integrasi keamanan dari OpenAI maupun Daybreak.
 
-Status: **early release / source-available nonkomersial**. Skill adalah instruksi untuk agent, bukan model AI baru dan bukan jaminan aplikasi aman.
+**KodeWaspada adalah proyek security tooling yang dikembangkan aktif**, dengan fokus pada review kode yang evidence-first, false-positive aware, fix-aware, dan retest-aware. Distribusinya bersifat source-available untuk penggunaan nonkomersial. Skill adalah instruksi untuk agent, bukan model AI baru dan bukan jaminan aplikasi aman.
 
 Jika proyek ini membantu workflow Anda, **star repo ini** agar lebih mudah ditemukan lagi. Masukan, kasus sintetis, dan kontribusi yang meningkatkan kualitas bukti sangat dihargai.
 
