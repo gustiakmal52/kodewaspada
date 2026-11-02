@@ -1,0 +1,35 @@
+{
+  "kw-request-shell": {
+    "title": "Input pengguna masuk ke perintah shell",
+    "priority": "tinggi",
+    "explanation": "Aturan melihat nilai dari query, body, atau params pada parameter bernama req/request mengalir ke exec atau execSync yang diimpor dari child_process. Shell dapat membaca sebagian nilai sebagai instruksi, bukan sekadar teks.",
+    "impact": "Jika pengguna benar-benar mengendalikan nilai ini dan tidak ada pembatasan yang efektif, perintah tambahan dapat berjalan dengan izin proses aplikasi. Ini masih kandidat: kendali pengguna, keterjangkauan kode, dan dampak belum diuji.",
+    "fix": "Hindari membangun perintah shell dari input. Gunakan API Node langsung atau execFile dengan program tetap, array argumen, dan shell: false. Validasi jenis serta pilihan input sesuai kebutuhan; argumen tetap dapat disalahgunakan oleh program tujuan. Jangan mengandalkan encoding HTML/URL sebagai pelindung shell.",
+    "verify": "Telusuri pemanggil route untuk membuktikan asal input. Tambahkan uji unit dengan nilai biasa serta karakter spasi, tanda kutip, dan titik koma; mock proses anak agar tidak menjalankan perintah. Pastikan argumen tetap data dan fitur normal tetap berjalan. Jalankan scanner lagi, kemudian tinjau perubahan secara manual.",
+    "ai_prompt": "Tinjau kandidat KW001 pada lokasi laporan. Buktikan dari mana input berasal, validasi yang dilalui, dan pemanggilan shell yang sebenarnya. Usulkan perubahan terkecil menggunakan API langsung atau execFile tanpa shell dan program tetap. Pertahankan perilaku sah, tambahkan uji unit yang mem-mock proses anak, dan jangan mengeksekusi payload atau mengklaim aman hanya karena scanner tidak lagi melapor.",
+    "references": ["https://nodejs.org/api/child_process.html#child_processexeccommand-options-callback", "https://cheatsheetseries.owasp.org/cheatsheets/OS_Command_Injection_Defense_Cheat_Sheet.html"],
+    "limitation": "Analisis lokal dalam satu fungsi memakai konvensi nama req/request, bukan bukti bahwa parameter adalah request HTTP. Tidak mencakup semua framework, alias runtime, alur lintas fungsi/file, spawn dengan shell, atau pembuktian eksploitasi. Validasi custom belum dimodelkan dan dapat tetap dilaporkan."
+  },
+  "kw-request-eval": {
+    "title": "Input pengguna diperlakukan sebagai kode JavaScript",
+    "priority": "tinggi",
+    "explanation": "Nilai request atau URL browser terlihat mengalir ke eval atau body Function. Nilai yang seharusnya menjadi data kemudian berpotensi dibaca sebagai kode.",
+    "impact": "Jika penyerang mengendalikan input dan jalur kode dapat dijalankan, kode tambahan mungkin berjalan dalam konteks aplikasi atau halaman. Laporan ini belum membuktikan akses, eksekusi, atau dampak pada pengguna lain.",
+    "fix": "Hilangkan evaluasi kode dinamis. Untuk JSON gunakan JSON.parse lalu validasi struktur dan tipe; untuk pilihan tindakan gunakan pemetaan tindakan yang diizinkan. Parser JSON bukan pengganti eval untuk kebutuhan selain JSON. Pertahankan penanganan input tidak valid.",
+    "verify": "Pastikan nilai memang berasal dari request/URL, bukan objek lokal dengan nama serupa. Uji data sah dan input bukan data yang diharapkan tanpa mengeksekusi input tersebut. Pastikan pilihan yang tidak dikenal ditolak dan tidak ada jalur eval/Function lain yang menggantikan jalur lama.",
+    "ai_prompt": "Tinjau kandidat KW002. Telusuri input hingga eval/Function dan jelaskan apakah input benar-benar dapat dikendalikan pengguna. Ganti evaluasi dinamis dengan parsing data atau pemetaan tindakan sesuai kebutuhan asli. Tambahkan uji kasus sah dan ditolak, tanpa menjalankan input sebagai kode. Jangan otomatis menyebut temuan terkonfirmasi atau perbaikan lengkap.",
+    "references": ["https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval", "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/Function"],
+    "limitation": "Sumber request dikenali dari parameter req/request dan beberapa properti location. Nama global yang dibayangi variabel lokal, validasi custom, alias evaluator, serta alur lintas fungsi/file tidak seluruhnya dimodelkan. Function hanya diperiksa pada argumen body terakhir."
+  },
+  "kw-request-html": {
+    "title": "Input pengguna mencapai keluaran HTML",
+    "priority": "sedang",
+    "explanation": "Nilai request atau URL terlihat mengalir ke innerHTML, dangerouslySetInnerHTML, atau res/response.send. Aturan ini menandai kandidat keluaran HTML, bukan otomatis kerentanan XSS.",
+    "impact": "Jika nilainya berupa teks yang dikuasai penyerang dan dirender sebagai HTML aktif tanpa perlindungan yang sesuai, isi halaman dapat berubah atau JavaScript dapat berjalan. Tipe respons, content-type, encoding, sanitasi, dan kebijakan browser menentukan dampak sebenarnya.",
+    "fix": "Untuk teks biasa gunakan textContent atau interpolasi JSX biasa. Untuk respons data gunakan format dan content-type yang sesuai. Jika benar-benar membutuhkan HTML, gunakan sanitizer HTML terpelihara dengan konfigurasi yang ditinjau; jangan mengubah kembali hasil bersih menjadi HTML berisiko. Encoding URL bukan encoding HTML.",
+    "verify": "Periksa tipe data dan content-type respons. Uji teks dengan karakter <, >, &, dan tanda kutip: untuk teks biasa karakter harus tampil sebagai teks, bukan markup. Periksa sanitasi di lingkungan uji lokal dan pertahankan tampilan sah. Jangan menyimpulkan XSS hanya dari res.send yang menerima objek atau respons text/plain.",
+    "ai_prompt": "Tinjau kandidat KW003, jangan langsung mengklaim XSS. Buktikan sumber input, tipe data, konteks DOM/JSX/HTTP, content-type, dan encoding/sanitasi yang sudah ada. Pilih perubahan paling kecil: textContent/JSX biasa untuk teks, atau sanitizer terpelihara jika HTML memang diperlukan. Tambahkan uji karakter HTML dan regresi tampilan; hindari mengirim data/kode rahasia ke layanan lain.",
+    "references": ["https://developer.mozilla.org/en-US/docs/Web/API/Element/innerHTML", "https://react.dev/reference/react-dom/components/common#dangerously-setting-the-inner-html", "https://github.com/cure53/DOMPurify", "https://expressjs.com/en/5x/api.html#res.send"],
+    "limitation": "Tidak membuktikan XSS. res.send dapat mengirim JSON atau text/plain sehingga wajib ditinjau. Hanya pemanggilan satu-argumen sanitize dari default import dompurify dimodelkan sebagai sanitizer; versi, hook, mutasi konfigurasi, dan library sanitasi lain belum diverifikasi. Analisis CE tidak menelusuri seluruh alur lintas fungsi/file."
+  }
+}

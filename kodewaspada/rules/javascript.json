@@ -1,0 +1,127 @@
+{
+  "rules": [
+    {
+      "id": "kw-request-shell",
+      "languages": ["javascript", "typescript"],
+      "severity": "WARNING",
+      "message": "KW001: nilai dari parameter req/request mengalir ke shell; tinjau kendali input dan validasinya.",
+      "mode": "taint",
+      "pattern-sources": [
+        {
+          "patterns": [
+            {"pattern-inside": "function ...($REQUEST, ...) { ... }"},
+            {"metavariable-regex": {"metavariable": "$REQUEST", "regex": "^(req|request)$"}},
+            {"pattern-either": [{"pattern": "$REQUEST.query"}, {"pattern": "$REQUEST.body"}, {"pattern": "$REQUEST.params"}]}
+          ],
+          "exact": true
+        }
+      ],
+      "pattern-sinks": [
+        {
+          "patterns": [
+            {"pattern-inside": "import { $EXEC } from \"$MODULE\"; ..."},
+            {"metavariable-regex": {"metavariable": "$MODULE", "regex": "^(node:)?child_process$"}},
+            {"metavariable-regex": {"metavariable": "$EXEC", "regex": "^(exec|execSync)$"}},
+            {"pattern-not-inside": "function ...(..., $EXEC, ...) { ... }"},
+            {"pattern": "$EXEC($COMMAND, ...)"},
+            {"focus-metavariable": "$COMMAND"}
+          ]
+        },
+        {
+          "patterns": [
+            {"pattern-either": [
+              {"pattern-inside": "import { $METHOD as $EXEC } from \"$MODULE\"; ..."},
+              {"pattern-inside": "const { $METHOD: $EXEC } = require(\"$MODULE\"); ..."}
+            ]},
+            {"metavariable-regex": {"metavariable": "$MODULE", "regex": "^(node:)?child_process$"}},
+            {"metavariable-regex": {"metavariable": "$METHOD", "regex": "^(exec|execSync)$"}},
+            {"pattern-not-inside": "function ...(..., $EXEC, ...) { ... }"},
+            {"pattern": "$EXEC($COMMAND, ...)"},
+            {"focus-metavariable": "$COMMAND"}
+          ]
+        },
+        {
+          "patterns": [
+            {"pattern-either": [
+              {"pattern-inside": "import * as $PROCESS from \"$MODULE\"; ..."},
+              {"pattern-inside": "import $PROCESS from \"$MODULE\"; ..."},
+              {"pattern-inside": "const $PROCESS = require(\"$MODULE\"); ..."}
+            ]},
+            {"metavariable-regex": {"metavariable": "$MODULE", "regex": "^(node:)?child_process$"}},
+            {"pattern-not-inside": "function ...(..., $PROCESS, ...) { ... }"},
+            {"pattern-either": [{"pattern": "$PROCESS.exec($COMMAND, ...)"}, {"pattern": "$PROCESS.execSync($COMMAND, ...)"}]},
+            {"focus-metavariable": "$COMMAND"}
+          ]
+        }
+      ],
+      "metadata": {"code": "KW001", "category": "security", "confidence": "MEDIUM", "validation": "candidate"}
+    },
+    {
+      "id": "kw-request-eval",
+      "languages": ["javascript", "typescript"],
+      "severity": "WARNING",
+      "message": "KW002: input request atau URL mengalir ke evaluasi kode; ini kandidat untuk ditinjau, bukan bukti eksploitasi.",
+      "mode": "taint",
+      "pattern-sources": [
+        {
+          "patterns": [
+            {"pattern-inside": "function ...($REQUEST, ...) { ... }"},
+            {"metavariable-regex": {"metavariable": "$REQUEST", "regex": "^(req|request)$"}},
+            {"pattern-either": [{"pattern": "$REQUEST.query"}, {"pattern": "$REQUEST.body"}, {"pattern": "$REQUEST.params"}]}
+          ],
+          "exact": true
+        },
+        {"pattern-either": [{"pattern": "window.location.search"}, {"pattern": "window.location.hash"}, {"pattern": "window.location.href"}, {"pattern": "document.location.search"}, {"pattern": "document.location.hash"}, {"pattern": "document.location.href"}, {"pattern": "location.search"}, {"pattern": "location.hash"}, {"pattern": "location.href"}], "exact": true}
+      ],
+      "pattern-sinks": [
+        {"patterns": [{"pattern": "eval($CODE)"}, {"focus-metavariable": "$CODE"}]},
+        {"patterns": [{"pattern": "new Function(..., $CODE)"}, {"focus-metavariable": "$CODE"}]},
+        {"patterns": [{"pattern": "Function(..., $CODE)"}, {"focus-metavariable": "$CODE"}]}
+      ],
+      "metadata": {"code": "KW002", "category": "security", "confidence": "MEDIUM", "validation": "candidate"}
+    },
+    {
+      "id": "kw-request-html",
+      "languages": ["javascript", "typescript"],
+      "severity": "WARNING",
+      "message": "KW003: input request atau URL mengalir ke keluaran HTML; periksa konteks, tipe data, encoding, dan respons sebelum menyimpulkan XSS.",
+      "mode": "taint",
+      "pattern-sources": [
+        {
+          "patterns": [
+            {"pattern-inside": "function ...($REQUEST, ...) { ... }"},
+            {"metavariable-regex": {"metavariable": "$REQUEST", "regex": "^(req|request)$"}},
+            {"pattern-either": [{"pattern": "$REQUEST.query"}, {"pattern": "$REQUEST.body"}, {"pattern": "$REQUEST.params"}]}
+          ],
+          "exact": true
+        },
+        {"pattern-either": [{"pattern": "window.location.search"}, {"pattern": "window.location.hash"}, {"pattern": "window.location.href"}, {"pattern": "document.location.search"}, {"pattern": "document.location.hash"}, {"pattern": "document.location.href"}, {"pattern": "location.search"}, {"pattern": "location.hash"}, {"pattern": "location.href"}], "exact": true}
+      ],
+      "pattern-sanitizers": [
+        {
+          "patterns": [
+            {"pattern-inside": "import $PURIFY from \"dompurify\"; ..."},
+            {"pattern-not-inside": "function ...(..., $PURIFY, ...) { ... }"},
+            {"pattern-not-inside": "... $PURIFY = ...; ..."},
+            {"pattern-not-inside": "... $PURIFY.$MEMBER = ...; ..."},
+            {"pattern-not-inside": "... $PURIFY.setConfig(...); ..."},
+            {"pattern-not-inside": "... $PURIFY.addHook(...); ..."},
+            {"pattern": "$PURIFY.sanitize($INPUT)"}
+          ],
+          "exact": true
+        }
+      ],
+      "pattern-sinks": [
+        {"patterns": [{"pattern": "$ELEMENT.innerHTML = $HTML"}, {"focus-metavariable": "$HTML"}]},
+        {"patterns": [{"pattern": "<$TAG ... dangerouslySetInnerHTML={{__html: $HTML}} ... />"}, {"focus-metavariable": "$HTML"}]},
+        {
+          "patterns": [
+            {"pattern-either": [{"pattern": "res.send($HTML)"}, {"pattern": "response.send($HTML)"}]},
+            {"focus-metavariable": "$HTML"}
+          ]
+        }
+      ],
+      "metadata": {"code": "KW003", "category": "security", "confidence": "MEDIUM", "validation": "candidate"}
+    }
+  ]
+}

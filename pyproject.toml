@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kodewaspada"
+version = "0.2.0"
+description = "Pendamping review keamanan kode JavaScript/TypeScript berbahasa Indonesia"
+requires-python = ">=3.10"
+license = "LicenseRef-PolyForm-Noncommercial-1.0.0"
+license-files = ["LICENSE"]
+readme = "docs/SCANNER.md"
+
+[project.scripts]
+kodewaspada = "kodewaspada.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["kodewaspada*"]
+
+[tool.setuptools.package-data]
+kodewaspada = ["rules/*.json"]

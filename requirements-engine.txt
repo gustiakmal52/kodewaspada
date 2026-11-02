@@ -1,0 +1,2 @@
+# Engine terpisah; versi yang dipakai dalam pengujian awal.
+semgrep==1.179.0

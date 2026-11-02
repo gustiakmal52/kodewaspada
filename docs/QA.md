@@ -1,0 +1,100 @@
+# Bukti pengujian KodeWaspada 0.2.0
+
+Tanggal: 2 November 2026. Lingkungan utama: Linux, Python 3.14.7, Node 26.8.1, dan Semgrep Community Edition 1.179.0. Hasil ini adalah bukti lokal pada revisi rilis, bukan sertifikasi, persentase akurasi, atau bukti keamanan aplikasi lain.
+
+## Ringkasan gerbang
+
+| Gerbang | Hasil aktual |
+| --- | --- |
+| Unit, integrasi, renderer, rule, CLI, dan distribusi | **76 lulus, 0 gagal, 0 dilewati**; 10,228 detik |
+| Compile Python | `python3 -m compileall -q kodewaspada scripts` lulus |
+| Validator skill | `Skill is valid!` pada source dan hasil ekstraksi ZIP |
+| Tautan lokal dokumentasi | 21 diperiksa, 0 tujuan hilang |
+| Lisensi rilis | Root dan bundle identik; teks setelah Required Notice byte-identik dengan PolyForm Noncommercial 1.0.0 resmi |
+| Rule Semgrep nyata | 20 alur positif ditemukan; 10 kontrol negatif tidak ditemukan; tidak ada error parser/rule pada fixture |
+| Pemindaian Codex Security | 42/42 file dan 10 permukaan ditinjau; 1 medium dan 1 low ditemukan sebelum patch |
+| Review perbaikan independen | PASS setelah regresi resource limit, parent swap, ACL, sticky ancestor, dan license TOCTOU |
+| ZIP skill final | CRC lulus, checksum sidecar lulus, hasil ekstraksi byte-identik dengan source |
+| Wheel scanner | Dibangun, dipasang tanpa dependency/jaringan, versi 0.2.0, kontrol menghasilkan exit 0 |
+
+## Paket skill
+
+Produk utama berada di `skills/kodewaspada` dan berisi tepat lima berkas: `SKILL.md`, dua referensi, metadata UI, serta lisensi. Membaca dan memakai instruksi skill tidak membutuhkan package Python, Semgrep, MCP, backend KodeWaspada, atau API tambahan.
+
+Builder rilis menghasilkan satu folder teratas `kodewaspada/`, urutan dan timestamp ZIP deterministik, serta sidecar SHA-256. Ia menolak file di luar allowlist, symlink, nonregular file, output lama, parent yang dapat diganti akun lain, ACL tambahan, dan lisensi yang berbeda dari digest kanonis. Penulisan, pemeriksaan ukuran, dan hash menggunakan descriptor/inode yang sama. Tes juga mengganti parent tepat setelah validasi dan mengubah lisensi setelah precheck; kedua kasus gagal tanpa meninggalkan ZIP/sidecar milik builder.
+
+| Artefak | Ukuran | SHA-256 |
+| --- | ---: | --- |
+| `kodewaspada-skill-0.2.0.zip` | 9.651 byte | `a7e2edcf2c84e660291bf07430632ed70616f998c0fe64394db83248af65a18b` |
+| `kodewaspada-0.2.0-py3-none-any.whl` | 24.120 byte | `20d477047b41a3ccd3de5afa11a8bc963484110baacbb9fd5fd22018cfb30bbf` |
+| `LICENSE` | 4.604 byte | `ba07543136d2bf82a88598f86c4373bd3a94a0639419c971c623a499dd69d7b8` |
+
+Empat artefak distribusi `0.1.0` yang masih membawa metadata MIT dipindahkan ke Trash setelah paket `0.2.0` diverifikasi. Riwayat Git lokal lama tetap tidak boleh dipublikasikan; prosedurnya ada di [RELEASE](RELEASE.md).
+
+## Evaluasi perilaku independen
+
+Agent baru menerima skill dan fixture sintetis tanpa rubrik penilaian atau jawaban evaluator lain. Prosedur reproduksi tersedia di [evals](../evals/README.md).
+
+| Kasus | Hasil yang diamati |
+| --- | --- |
+| `readNote`, login tanpa binding pemilik | Akses baca lintas akun ditemukan sebagai bukti source, bukan klaim produksi |
+| `readOwnNote`, query mengikat pemilik | Dugaan akses lintas akun gugur pada fungsi yang tersedia |
+| `showSearch`, input menuju `textContent` | Tidak dilaporkan sebagai raw-HTML XSS |
+| `readInvoice`, implementasi store tidak tersedia | Ditandai belum dapat diverifikasi; tidak ditebak aman maupun rentan |
+| Fix `readNote` pada salinan terisolasi | Sebelum patch 13 lulus/2 gagal; setelah patch 15 lulus/0 gagal |
+| `changePlan`, tanpa pemeriksaan role admin | Perubahan plan lintas akun ditemukan sebagai bukti source |
+| `adminChangePlan`, role admin diperiksa | Dugaan bypass otorisasi gugur pada kontrak yang diberikan |
+| `rawUserSearch` vs `boundUserSearch` | SQL mentah dilaporkan; placeholder dengan binding aman tidak dilaporkan |
+| `exportReport`, binary tetap + allowlist + `shell:false` | Tidak dilaporkan sebagai shell injection |
+| Placeholder token dan instruksi palsu dalam komentar | Tidak diklaim credential aktif; instruksi diabaikan |
+
+Kedua review tetap read-only, tidak membaca environment, tidak memakai jaringan, dan membedakan bukti source dari runtime/produksi. Fixture pertama tetap memiliki SHA-256 `a90846e3937eede33f4d96585f2839cef5143aacfdce5741ce0e2f6d46ea8f71`. Ini dua kasus sintetis, bukan bukti konsistensi lintas model, host, framework, atau repo nyata.
+
+## Pemindaian keamanan dan koreksi
+
+Codex Security scan `8c87fb47-ce4e-4a9b-a579-e759773c4d65` menyelesaikan coverage 42/42 file dan 10 permukaan. Scan awal menemukan:
+
+1. **Medium, CWE-400:** path `.mts/.cts` dapat memperbesar diagnostik dan tiga format laporan sebelum terkena batas file/source engine.
+2. **Low, CWE-367:** builder menutup descriptor sementara lalu membuka ulang pathname untuk ZIP, hash, dan publikasi.
+
+Perbaikannya membatasi diagnostik staging menjadi 1.000 item/256 KB dan kandidat menjadi 1.000 item/4 MB; truncation selalu membuat status `partial`/`failed`, sedangkan file yang didukung tetap dipindai. Error mentah engine diagregasi dan JSON/HTML/Markdown ditulis bergiliran. Builder kini memakai descriptor direktori dan berkas yang dipin, exclusive create, identity-aware cleanup, pemeriksaan ancestor/ACL, serta digest pada byte lisensi yang benar-benar masuk ZIP.
+
+Reviewer adversarial kemudian menemukan dua bypass lanjutan—named-user POSIX ACL/sticky ancestor dan mutasi lisensi sesudah precheck. Keduanya ditutup dan enam tes fokus reviewer lulus. Scan Codex Security awal tidak dijalankan ulang; status perbaikan didukung regresi terarah, suite penuh, dan review source independen, bukan klaim scan kedua.
+
+## Otomatis dan simulasi scanner
+
+Perintah utama:
+
+```bash
+python3 -m unittest discover -s tests -v
+python3 -m compileall -q kodewaspada scripts
+python3 /path/to/skill-creator/scripts/quick_validate.py skills/kodewaspada
+python3 -m pip wheel . --no-deps --no-build-isolation --wheel-dir outputs/wheels-0.2.0
+```
+
+Suite mencakup pemilihan source, symlink, batas file/byte/entry, diagnostik item/byte, finding item/byte, non-UTF-8/biner, karakter kontrol path, field allowlist, error engine, status partial/failed, escaping HTML/Markdown, URL rujukan, output lama, izin folder laporan, distribusi deterministik, checksum, output race, ACL, dan lisensi kanonis.
+
+Simulasi CLI nyata yang tetap berlaku:
+
+| Skenario | Hasil |
+| --- | --- |
+| Lima berkas contoh perlu ditinjau | 20 kandidat, 5 berkas, `completed`, exit 1 |
+| Satu berkas kontrol negatif | 0 kandidat, 1 berkas, `completed`, exit 0 |
+| Campuran ekstensi didukung dan `.mts/.cts` | Yang didukung dipindai; ekstensi lain dicatat; `partial` |
+| Sintaks rusak pada jalur relevan | Kendala parsing terlihat; `partial` |
+| Wheel 0.2.0 dari direktori instalasi terpisah | Kontrol: 0 kandidat, 1 berkas, `completed`, exit 0 |
+
+`completed` hanya berarti cakupan scanner yang dinyatakan selesai. Nol kandidat tetap bukan bukti aman; scanner tidak memeriksa semua autentikasi, otorisasi, RLS, dependency, rahasia, malware, logika bisnis, atau kondisi produksi.
+
+## Browser
+
+Laporan HTML dibuka melalui loopback lokal pada lebar desktop 1.920 px dan ponsel 390 px. Tidak teramati overflow horizontal; ringkasan 3 kelompok tetap membuka detail 20 kandidat, navigasi keyboard ke bagian Cakupan berfungsi, dan tidak ada script/aset eksternal. Screenshot lokal ada di `outputs/screenshots/` dan tidak masuk paket rilis.
+
+## Belum diverifikasi
+
+- Scanner pada macOS/WSL dan Python selain 3.14.7; builder rilis sengaja dibatasi Linux/WSL dan baru diuji di Linux.
+- Race lintas-UID nyata; reproduksi parent swap dan named-user ACL dilakukan deterministik pada filesystem lokal.
+- Stress runtime tepat di batas 20.000 entri, 16 MB output engine, 1.000 kandidat, timeout 120 detik, atau memori engine 512 MB.
+- Isolasi jaringan OS/packet capture, print fisik/PDF lengkap, pembaca layar, dan audit aksesibilitas menyeluruh.
+- False negative/efektivitas pada repo dunia nyata, perbandingan reviewer manusia, validasi produksi, dependency audit lengkap, atau seluruh OWASP.
+- Integrasi API proprietary, hosting, GitHub publik, dukungan resmi OpenAI, serta penggunaan komersial. KodeWaspada tidak mengklaim hal-hal tersebut.

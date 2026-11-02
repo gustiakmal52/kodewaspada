@@ -1,0 +1,4 @@
+interface:
+  display_name: "KodeWaspada"
+  short_description: "Review keamanan kode dengan bukti yang jelas"
+  default_prompt: "Gunakan $kodewaspada untuk meninjau keamanan proyek ini; jelaskan bukti, dampak, dan langkah perbaikannya tanpa mengubah kode dulu."
