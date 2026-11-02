@@ -1,18 +1,36 @@
 # KodeWaspada
 
-**Skill blue-team untuk orang yang ngoding dengan AI. Pahami risikonya, perbaiki penyebabnya, uji ulang hasilnya.**
+**Security review untuk developer yang ngoding dengan AI: cari bukti, perbaiki akar masalah, lalu retest.**
 
-Pasang skill, buka proyek di coding assistant, lalu minta review. Agent menelusuri alur kode dan kontrol keamanan, menjelaskan dampak dengan bahasa sederhana, serta membantu memperbaiki ketika diminta. Tidak perlu dashboard, server, atau akun KodeWaspada.
+[![Source Available](https://img.shields.io/badge/license-PolyForm%20Noncommercial-6f42c1)](LICENSE)
+[![Security Review](https://img.shields.io/badge/focus-AppSec%20%2B%20AI%20Coding-0a7f5a)](#yang-dibantu)
+[![Language](https://img.shields.io/badge/docs-Bahasa%20Indonesia-dc2626)](#kodewaspada)
 
-KodeWaspada dirancang untuk **OpenAI Codex** dan asisten coding lain yang mendukung format Agent Skills yang kompatibel. Ini proyek komunitas independen: bukan produk resmi, afiliasi, dukungan, sertifikasi, atau integrasi keamanan dari OpenAI maupun Daybreak.
+KodeWaspada adalah **Agent Skill blue-team** untuk OpenAI Codex dan coding assistant yang mendukung format Agent Skills kompatibel. Ia membantu agent menelusuri alur kode, membedakan dugaan dari bukti, memperbaiki root cause saat diminta, dan menguji ulang hasilnya.
+
+### Mulai dalam 30 detik
+
+Salin folder [`skills/kodewaspada`](skills/kodewaspada) ke direktori skill proyek, lalu gunakan:
 
 ```text
 $kodewaspada Review keamanan proyek ini sebelum deploy.
 Prioritaskan akses data antar pengguna dan input yang berbahaya.
-Jelaskan buktinya dalam bahasa sederhana. Jangan ubah kode dulu.
+Tunjukkan bukti, dampak, dan batas analisis. Jangan ubah kode dulu.
 ```
 
-Status: paket skill awal, tersedia sebagai source-available dengan penggunaan nonkomersial. Skill adalah instruksi untuk agent, bukan model AI baru atau jaminan aplikasi aman. Penggunaan model mengikuti akun, biaya, izin, dan kebijakan provider yang Anda pilih.
+**Kenapa beda dari prompt security biasa?**
+
+- Evidence-first: temuan harus punya lokasi dan alur kode yang jelas.
+- False-positive aware: kontrol yang sudah benar harus menggugurkan dugaan.
+- Fix-aware: patch hanya saat diminta dan fokus ke akar masalah.
+- Retest-aware: tidak mengklaim lulus sebelum pengujian benar-benar dijalankan.
+- Ada scanner opsional untuk beberapa pola taint JS/TS, tetapi skill tetap bisa dipakai tanpa Python atau Semgrep.
+
+> Proyek komunitas independen. Bukan produk resmi, afiliasi, dukungan, sertifikasi, atau integrasi keamanan dari OpenAI maupun Daybreak.
+
+Status: **early release / source-available nonkomersial**. Skill adalah instruksi untuk agent, bukan model AI baru dan bukan jaminan aplikasi aman.
+
+Jika proyek ini membantu workflow Anda, **star repo ini** agar lebih mudah ditemukan lagi. Masukan, kasus sintetis, dan kontribusi yang meningkatkan kualitas bukti sangat dihargai.
 
 ## Yang dibantu
 
