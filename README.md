@@ -2,6 +2,7 @@
 
 **Evidence-first security review for developers building with AI coding agents.**
 
+[![CI](https://github.com/gustiakmal52/kodewaspada/actions/workflows/ci.yml/badge.svg)](https://github.com/gustiakmal52/kodewaspada/actions/workflows/ci.yml)
 [![Source Available](https://img.shields.io/badge/license-PolyForm%20Noncommercial-6f42c1)](LICENSE)
 [![Focus](https://img.shields.io/badge/focus-AppSec%20%2B%20AI%20Coding-0a7f5a)](#what-it-does)
 [![Skill](https://img.shields.io/badge/format-Agent%20Skill-2563eb)](skills/kodewaspada/SKILL.md)
