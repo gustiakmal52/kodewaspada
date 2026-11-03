@@ -6,10 +6,12 @@ build-backend = "setuptools.build_meta"
 name = "kodewaspada"
 version = "0.2.0"
 description = "Evidence-first security review agent and optional JavaScript/TypeScript taint scanner"
+authors = [{ name = "EL1Syum" }]
+keywords = ["appsec", "security", "code-review", "semgrep", "ai-agents", "agent-skills", "secure-coding"]
 requires-python = ">=3.10"
 license = "LicenseRef-PolyForm-Noncommercial-1.0.0"
 license-files = ["LICENSE"]
-readme = "docs/SCANNER.md"
+readme = "README.md"
 
 [project.scripts]
 kodewaspada = "kodewaspada.cli:main"
@@ -19,3 +21,9 @@ include = ["kodewaspada*"]
 
 [tool.setuptools.package-data]
 kodewaspada = ["rules/*.json"]
+
+[project.urls]
+Homepage = "https://github.com/gustiakmal52/kodewaspada"
+Repository = "https://github.com/gustiakmal52/kodewaspada"
+Issues = "https://github.com/gustiakmal52/kodewaspada/issues"
+Security = "https://github.com/gustiakmal52/kodewaspada/blob/main/SECURITY.md"
