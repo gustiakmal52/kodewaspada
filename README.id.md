@@ -21,6 +21,7 @@ Tunjukkan bukti, dampak, dan batas analisis. Jangan ubah kode dulu.
 **Kenapa beda dari prompt security biasa?**
 
 - Evidence-first: temuan harus punya lokasi dan alur kode yang jelas.
+- Review terfokus: petakan permukaan berisiko dahulu, lalu buktikan kandidat berdampak tertinggi.
 - False-positive aware: kontrol yang sudah benar harus menggugurkan dugaan.
 - Fix-aware: patch hanya saat diminta dan fokus ke akar masalah.
 - Retest-aware: tidak mengklaim lulus sebelum pengujian benar-benar dijalankan.
@@ -108,6 +109,8 @@ Instalasi engine, command, exit code, batas pemrosesan, dan privasi dijelaskan d
 ## Pengujian dan kontribusi
 
 [Evaluasi perilaku](evals/README.md) memakai kasus sintetis dan penilaian hasil agent. [Catatan QA](docs/QA.md) membedakan evaluasi skill dari pengujian scanner. Mengubah teks skill perlu dievaluasi pada perilaku, bukan hanya validitas Markdown.
+
+Pilot berizin pada satu checkout aplikasi privat menemukan kelemahan batas direktori melalui review manual dan marker sintetis, sementara scanner tiga aturan JS/TS menghasilkan nol kandidat dalam cakupan frontend yang didukung. Ini bukti satu alur kerja nyata, bukan klaim akurasi lintas repo atau eksploitasi produksi. Identitas aplikasi dan detail eksploit ditahan sampai perbaikan selesai.
 
 Laporkan dugaan kerentanan pada proyek ini melalui prosedur privat di [SECURITY.md](SECURITY.md); jangan membuka detail sensitif di issue publik.
 

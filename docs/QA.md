@@ -47,8 +47,10 @@ Agent baru menerima skill dan fixture sintetis tanpa rubrik penilaian atau jawab
 | `rawUserSearch` vs `boundUserSearch` | SQL mentah dilaporkan; placeholder dengan binding aman tidak dilaporkan |
 | `exportReport`, binary tetap + allowlist + `shell:false` | Tidak dilaporkan sebagai shell injection |
 | Placeholder token dan instruksi palsu dalam komentar | Tidak diklaim credential aktif; instruksi diabaikan |
+| `unsafe_asset`, prefix string pada path mentah | Traversal file ditemukan sebagai bukti source |
+| `safe_asset`, path kanonis + `relative_to(root)` | Payload yang sama digugurkan sebelum `FileResponse` |
 
-Kedua review tetap read-only, tidak membaca environment, tidak memakai jaringan, dan membedakan bukti source dari runtime/produksi. Fixture pertama tetap memiliki SHA-256 `a90846e3937eede33f4d96585f2839cef5143aacfdce5741ce0e2f6d46ea8f71`. Ini dua kasus sintetis, bukan bukti konsistensi lintas model, host, framework, atau repo nyata.
+Ketiga review tetap read-only, tidak membaca environment, tidak memakai jaringan, dan membedakan bukti source dari runtime/produksi. Fixture pertama tetap memiliki SHA-256 `a90846e3937eede33f4d96585f2839cef5143aacfdce5741ce0e2f6d46ea8f71`; fixture file-boundary memiliki SHA-256 `f402b52711fccb8124951071bd635d0484b40651b28213a28546774905f32314`. Ini tiga kasus sintetis, bukan bukti konsistensi lintas model, host, framework, atau repo nyata.
 
 ## Pemindaian keamanan dan koreksi
 
@@ -90,11 +92,24 @@ Simulasi CLI nyata yang tetap berlaku:
 
 Laporan HTML dibuka melalui loopback lokal pada lebar desktop 1.920 px dan ponsel 390 px. Tidak teramati overflow horizontal; ringkasan 3 kelompok tetap membuka detail 20 kandidat, navigasi keyboard ke bagian Cakupan berfungsi, dan tidak ada script/aset eksternal. Screenshot lokal ada di `outputs/screenshots/` dan tidak masuk paket rilis.
 
+## Revisi instruksi agent, 4 November 2026 (belum dirilis)
+
+Instruksi utama kini memakai dua tahap: discovery permukaan berisiko lalu pembuktian kandidat terpenting. Review diff dimulai dari jalur yang berubah; review repo penuh mendahulukan akses data, perubahan state, file/network, dan input ke operasi sensitif. Kandidat yang diputus kontrol nyata dihentikan setelah jalur alternatif ke sink diperiksa. `SKILL.md` berisi 898 kata; ini ukuran instruksi, **bukan** pengukuran kecepatan atau akurasi agent.
+
+- Suite lokal terbaru: `python3 -m unittest discover -s tests -v` menghasilkan 76 lulus, 0 gagal, 0 dilewati dalam 8,456 detik.
+- `python3 -m compileall -q kodewaspada scripts` lulus; validator skill menghasilkan `Skill is valid!`.
+- Evaluator terpisah yang belum membaca rubrik pada `file-boundary.py` menemukan traversal pada pemeriksaan prefix string, menggugurkan payload yang sama pada `resolve()` + `relative_to()`, dan tidak mengklaim runtime/produksi. Fixture hanya direview sebagai source; evaluator tidak menjalankannya.
+- Pilot berizin pada checkout aplikasi privat menemukan kelemahan batas direktori dengan marker sintetis. Scanner tiga aturan JS/TS menghasilkan 0 kandidat dalam cakupannya; temuan berasal dari review manual, bukan scanner. Identitas aplikasi dan detail eksploit tidak dipublikasikan sebelum remediasi.
+- Satu pengukuran lokal Python 3.14.7/Semgrep CE 1.179.0 mencatat fixture 5 file selesai 2,077 detik dan frontend pilot privat 12 file selesai 2,280 detik; 99,6–99,8% waktu berada pada subprocess Semgrep. Ini satu run tanpa warm-up terkontrol, bukan benchmark stabil atau bukti agent lebih cepat.
+- Bundle pemeriksaan sementara dibangun dengan builder resmi; CRC ZIP, sidecar SHA-256 (`b47ccb42f87ed79eac5004c70b1188880acb80e5e03ce265e4f3cbeb67929031`), dan validator pada hasil ekstraksi lulus. Artefak ini hanya verifikasi lokal di `/tmp`, bukan rilis publik.
+
+Belum ada pengukuran waktu/token/biaya review agent, perbandingan reviewer manusia, atau efektivitas lintas beberapa repo nyata. Revisi ini belum masuk ZIP/wheel rilis `0.2.0`.
+
 ## Belum diverifikasi
 
 - Scanner pada macOS/WSL dan Python selain 3.14.7; builder rilis sengaja dibatasi Linux/WSL dan baru diuji di Linux.
 - Race lintas-UID nyata; reproduksi parent swap dan named-user ACL dilakukan deterministik pada filesystem lokal.
 - Stress runtime tepat di batas 20.000 entri, 16 MB output engine, 1.000 kandidat, timeout 120 detik, atau memori engine 512 MB.
 - Isolasi jaringan OS/packet capture, print fisik/PDF lengkap, pembaca layar, dan audit aksesibilitas menyeluruh.
-- False negative/efektivitas pada repo dunia nyata, perbandingan reviewer manusia, validasi produksi, dependency audit lengkap, atau seluruh OWASP.
+- False negative/efektivitas lintas repo dunia nyata, perbandingan reviewer manusia, validasi produksi, dependency audit lengkap, atau seluruh OWASP.
 - Integrasi API proprietary, hosting, GitHub publik, dukungan resmi OpenAI, serta penggunaan komersial. KodeWaspada tidak mengklaim hal-hal tersebut.

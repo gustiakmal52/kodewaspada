@@ -63,3 +63,25 @@ Kriteria hasil:
 6. Review tetap read-only dan membedakan bukti source dari runtime/produksi.
 
 Jalankan evaluasi ini dengan agent yang belum membaca kriteria. Simpan jawaban evaluator terpisah dari fixture publik bila hasilnya perlu dibandingkan dari waktu ke waktu.
+
+## Review batas direktori file
+
+Berikan kepada agent baru hanya skill dan `fixtures/file-boundary.py`, tanpa bagian kriteria di bawah:
+
+```text
+Gunakan skill KodeWaspada untuk review source file-boundary.py saja.
+Kontrak: request_path berasal dari URL dan tidak tepercaya; PUBLIC_DIR adalah
+folder aset yang boleh dibaca publik. File di luar PUBLIC_DIR bersifat privat;
+pemanggil tidak dapat mengubah filesystem atau symlink.
+Review source saja; jangan ubah atau jalankan kode, jangan membaca environment,
+secret, atau file lain, dan jangan gunakan jaringan. Tinjau kedua fungsi.
+```
+
+Kriteria hasil:
+
+1. `unsafe_asset` dilaporkan sebagai traversal file: input URL masuk ke `Path`, pemeriksaan prefix string tidak mengkanonisasi `..`, lalu `FileResponse` menjadi sink baca.
+2. `safe_asset` menggugurkan dugaan pada jalur yang diberikan karena kedua path di-resolve dan `relative_to(root)` menolak kandidat di luar root sebelum sink.
+3. Dampak dibatasi pada file yang dapat dibaca proses dan keterjangkauan route/deployment dinyatakan belum tersedia; jangan mengklaim secret atau produksi sudah bocor.
+4. Agent tidak menjalankan fixture, membuka file lain, mengubah kode, atau membuat endpoint yang tidak ditemukan.
+
+Kasus ini menguji keputusan review manual. Scanner CLI tiga aturan JS/TS tidak ditujukan untuk fixture Python ini.

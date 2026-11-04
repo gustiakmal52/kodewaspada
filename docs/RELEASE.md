@@ -4,9 +4,9 @@ Dokumen ini menjaga agar paket yang dibagikan konsisten dengan lisensi nonkomers
 
 ## Risiko riwayat pengembangan
 
-Dua commit pengembangan lokal sebelum `0.2.0` memakai lisensi MIT. Repo belum memiliki remote dan belum dipublikasikan, tetapi **riwayat lokal tersebut tidak boleh didorong ke repo publik** jika syarat nonkomersial ingin dipertahankan. Lisensi yang sudah diterima pihak lain biasanya tidak dapat ditarik kembali hanya dengan mengganti berkas pada commit berikutnya.
+Dua commit pada checkout pengembangan lama sebelum `0.2.0` memakai lisensi MIT. Riwayat publik `main` sudah dimulai ulang dari snapshot bersih dan tidak memuat commit lama tersebut. **Jangan merge atau push branch pengembangan lama ke riwayat publik** jika syarat nonkomersial ingin dipertahankan. Lisensi yang sudah diterima pihak lain biasanya tidak dapat ditarik kembali hanya dengan mengganti berkas pada commit berikutnya.
 
-Untuk publikasi pertama, gunakan snapshot bersih `0.2.0` tanpa folder `.git`, lalu buat riwayat baru yang dimulai dari snapshot berlisensi PolyForm Noncommercial 1.0.0. Simpan repo pengembangan lokal sebagai arsip privat; jangan menghapus atau menulis ulang riwayatnya tanpa keputusan pemilik.
+Untuk pembaruan publik berikutnya, buat branch dari `origin/main` yang bersih. Branch lokal lama `codex/kodewaspada-v01` hanya arsip privat: jangan menggabungkannya ke branch publik dan jangan memakai `git push --all` atau `git push --mirror`. Jangan menghapus atau menulis ulang riwayat lama tanpa keputusan pemilik.
 
 ## Pemeriksaan sebelum berbagi
 

@@ -24,6 +24,7 @@ A generic "act as a security expert" prompt can produce useful ideas, but it doe
 KodeWaspada gives the agent a repeatable decision process:
 
 - **Evidence-first:** follow controllable input through validation/authorization to the sensitive operation and effect.
+- **Focused review passes:** map the risky surface first, then prove the highest-impact candidates instead of scanning every folder equally.
 - **False-positive aware:** real controls can invalidate a finding and should be documented when they do.
 - **Fix-aware:** patch the root cause only when a fix is requested.
 - **Retest-aware:** do not claim success until relevant tests are actually run.
@@ -144,12 +145,19 @@ Current eval scenarios check whether the agent can:
 - refuse to guess about unavailable authorization helpers,
 - distinguish raw SQL construction from parameter binding,
 - avoid false shell-injection claims when execFile is used with fixed binaries and separate arguments,
+- identify unsafe file-path containment while dismissing the canonical-path control,
 - ignore malicious instructions embedded in reviewed comments,
 - keep read-only review read-only.
 
 See [evals/README.md](evals/README.md).
 
 These fixtures are not a universal benchmark, an accuracy percentage, or proof that the skill has no false negatives. Material instruction changes should be reevaluated.
+
+### Authorized private-repository pilot
+
+On one authorized private application checkout, the skill-led manual review found a file-boundary flaw and validated the behavior locally with a synthetic marker. No secret was accessed and no production behavior was claimed. Separately, a fresh evaluator correctly distinguished the equivalent vulnerable and safe functions in the public synthetic fixture.
+
+The optional JS/TS scanner reported zero candidates within its supported frontend scope. That distinction is intentional: the finding came from manual agent review, not from pretending three JS/TS rules cover an entire application. One pilot demonstrates a useful workflow, not cross-repository accuracy. Application identity and exploit details remain private pending remediation.
 
 ## Security and privacy boundaries
 
