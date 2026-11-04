@@ -3,6 +3,7 @@
 **Evidence-first security review for developers building with AI coding agents.**
 
 [![Source Available](https://img.shields.io/badge/license-PolyForm%20Noncommercial-6f42c1)](LICENSE)
+[![Commercial Licensing](https://img.shields.io/badge/commercial-license%20by%20agreement-d97706)](COMMERCIAL-LICENSING.md)
 [![Focus](https://img.shields.io/badge/focus-AppSec%20%2B%20AI%20Coding-0a7f5a)](#what-it-does)
 [![Skill](https://img.shields.io/badge/format-Agent%20Skill-2563eb)](skills/kodewaspada/SKILL.md)
 [![Language](https://img.shields.io/badge/README-English-111827)](#kodewaspada)
@@ -181,9 +182,9 @@ Full scanner coverage requires the documented Semgrep dependency. See [docs/SCAN
 
 ## Contributing
 
-External review is welcome, especially when it improves the evidence model rather than merely increasing the number of warnings.
+External review and proposals are welcome, especially when they improve the evidence model rather than merely increasing the number of warnings. Copyrightable pull requests are not merged until the contributor-rights process described in [CONTRIBUTING.md](CONTRIBUTING.md) is satisfied.
 
-Useful contributions include:
+Useful proposals include:
 
 - synthetic positive and negative security cases,
 - false-positive reductions,
@@ -198,6 +199,12 @@ For discussion, see the open feedback issue: [real-world AppSec review cases](ht
 
 If KodeWaspada improves your security-review workflow, consider **starring the repository** so other developers can find it.
 
+## Commercial licensing
+
+The public repository remains available under PolyForm Noncommercial 1.0.0. Companies, consultancies, paid products, and other commercial users can [request a quote for a separate written commercial license](COMMERCIAL-LICENSING.md).
+
+Commercial permission is not automatic: an inquiry or quote grants no rights until the buyer and copyright holder execute a written agreement and satisfy any agreed payment condition. Pricing is scope-based; no fixed public price or bundled support is promised.
+
 ## License
 
 KodeWaspada's original instructions, wrapper, rules, examples, and documentation are available under the [PolyForm Noncommercial License 1.0.0](LICENSE) with:
@@ -206,7 +213,7 @@ KodeWaspada's original instructions, wrapper, rules, examples, and documentation
 Required Notice: Copyright 2026 EL1Syum
 ~~~
 
-This repository is **source-available, not OSI open source**. Noncommercial use, copying, modification, and redistribution are allowed within the license terms. Commercial use requires separate written permission from the rights holder.
+This repository is **source-available, not OSI open source**. Noncommercial use, copying, modification, and redistribution are allowed within the public license terms. Commercial use requires a [separate written commercial license](COMMERCIAL-LICENSING.md) from the copyright holder.
 
 Semgrep is a separate upstream dependency and is not bundled as the project's own engine.
 

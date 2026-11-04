@@ -50,4 +50,8 @@ Do **not** open a public issue for a vulnerability in KodeWaspada itself. Follow
 
 ## License
 
-By contributing, you agree that your contribution may be distributed under the repository's existing PolyForm Noncommercial licensing terms and required notice. Review [LICENSE](LICENSE) before submitting a contribution.
+KodeWaspada may offer separate commercial licenses in addition to the public PolyForm Noncommercial license. A pull request alone does not grant the maintainer the additional rights needed to relicense a contributor's work commercially.
+
+Until the maintainer confirms a separately reviewed contributor agreement or relicensing grant, external copyrightable code and documentation contributions will not be merged. Non-confidential issue reports, review comments, and synthetic reproduction ideas remain welcome. Do not submit third-party material you are not authorized to license.
+
+Review [LICENSE](LICENSE) and [COMMERCIAL-LICENSING.md](COMMERCIAL-LICENSING.md) before contributing. The maintainer will document any future contributor-agreement process before accepting covered contributions.

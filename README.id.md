@@ -3,6 +3,7 @@
 **Security review untuk developer yang ngoding dengan AI: cari bukti, perbaiki akar masalah, lalu retest.**
 
 [![Source Available](https://img.shields.io/badge/license-PolyForm%20Noncommercial-6f42c1)](LICENSE)
+[![Lisensi Komersial](https://img.shields.io/badge/komersial-lisensi%20tertulis-d97706)](COMMERCIAL-LICENSING.md)
 [![Security Review](https://img.shields.io/badge/focus-AppSec%20%2B%20AI%20Coding-0a7f5a)](#yang-dibantu)
 [![Language](https://img.shields.io/badge/docs-Bahasa%20Indonesia-dc2626)](#kodewaspada)
 
@@ -31,7 +32,13 @@ Tunjukkan bukti, dampak, dan batas analisis. Jangan ubah kode dulu.
 
 **KodeWaspada adalah proyek security tooling yang dikembangkan aktif**, dengan fokus pada review kode yang evidence-first, false-positive aware, fix-aware, dan retest-aware. Distribusinya bersifat source-available untuk penggunaan nonkomersial. Skill adalah instruksi untuk agent, bukan model AI baru dan bukan jaminan aplikasi aman.
 
-Jika proyek ini membantu workflow Anda, **star repo ini** agar lebih mudah ditemukan lagi. Masukan, kasus sintetis, dan kontribusi yang meningkatkan kualitas bukti sangat dihargai.
+Jika proyek ini membantu workflow Anda, **star repo ini** agar lebih mudah ditemukan lagi. Masukan, kasus sintetis, dan usulan yang meningkatkan kualitas bukti sangat dihargai. Pull request berhak cipta baru dapat digabungkan setelah proses hak kontributor pada [CONTRIBUTING.md](CONTRIBUTING.md) terpenuhi.
+
+## Lisensi komersial bila dibutuhkan
+
+Repository publik tetap tersedia berdasarkan PolyForm Noncommercial 1.0.0. Perusahaan, konsultan, produk berbayar, dan pengguna komersial lain dapat [meminta quotation untuk lisensi komersial tertulis yang terpisah](COMMERCIAL-LICENSING.md).
+
+Membuka inquiry atau menerima quotation belum memberikan hak komersial. Izin baru berlaku setelah pembeli dan pemegang hak menandatangani perjanjian serta memenuhi syarat pembayaran yang disepakati. Harga ditentukan berdasarkan ruang lingkup; tidak ada harga publik tetap atau support bawaan yang dijanjikan.
 
 ## Yang dibantu
 
@@ -120,11 +127,11 @@ python3 -m unittest discover -s tests -v
 
 Tes scanner membutuhkan Semgrep untuk cakupan penuh; lihat panduannya. Perubahan aturan perlu contoh positif dan negatif. Perubahan skill perlu kasus yang memperlihatkan keputusan lebih baik, termasuk saat dugaan harus gugur. Jangan memakai data klien sebagai fixture.
 
-## Lisensi nonkomersial dan berbagi
+## Lisensi publik, komersial, dan berbagi
 
 Instruksi, wrapper, aturan asli, contoh, dan dokumentasi KodeWaspada tersedia di bawah [PolyForm Noncommercial License 1.0.0](LICENSE) dengan `Required Notice: Copyright 2026 EL1Syum`. Ini lisensi **source-available**, bukan lisensi open-source OSI.
 
-Anda boleh memakai, menyalin, mengubah, dan membagikan proyek untuk tujuan nonkomersial yang diizinkan lisensi. Saat membagikan salinan atau perubahan, sertakan ketentuan lisensi atau URL resminya dan pertahankan baris `Required Notice`. Menjual kembali, memasukkan KodeWaspada ke produk atau layanan berbayar, atau penggunaan komersial lain memerlukan lisensi tertulis terpisah dari pemegang hak. Ringkasan ini bukan pengganti teks lisensi.
+Anda boleh memakai, menyalin, mengubah, dan membagikan proyek untuk tujuan nonkomersial yang diizinkan lisensi. Saat membagikan salinan atau perubahan, sertakan ketentuan lisensi atau URL resminya dan pertahankan baris `Required Notice`. Menjual kembali, memasukkan KodeWaspada ke produk atau layanan berbayar, atau penggunaan komersial lain memerlukan [lisensi komersial tertulis terpisah](COMMERCIAL-LICENSING.md) dari pemegang hak. Ringkasan ini bukan pengganti teks lisensi.
 
 Sebelum membuat rilis atau repo publik, ikuti [gerbang distribusi](docs/RELEASE.md). Riwayat pengembangan lokal sebelum `0.2.0` masih memuat lisensi lama dan tidak disiapkan untuk dipublikasikan.
 

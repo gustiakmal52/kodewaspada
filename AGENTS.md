@@ -1,11 +1,13 @@
 # KodeWaspada contributor instructions
 
-KodeWaspada is a source-available, noncommercial blue-team skill for coding assistants. The primary product is `skills/kodewaspada/`; the Python/Semgrep scanner is optional supporting evidence for three JavaScript/TypeScript flows.
+KodeWaspada is a source-available blue-team skill for coding assistants. Public use is governed by PolyForm Noncommercial 1.0.0; the copyright holder may separately offer paid commercial licenses. The primary product is `skills/kodewaspada/`; the Python/Semgrep scanner is optional supporting evidence for three JavaScript/TypeScript flows.
 
 ## Invariants
 
 - Do not claim affiliation, endorsement, or official integration with OpenAI, Codex Security, or Daybreak. Compatibility with an Agent Skills format is not endorsement.
 - Do not call the project open source while the PolyForm Noncommercial license applies. Preserve the exact root and bundled-skill license notices.
+- Do not imply that a commercial inquiry, quote, or payment grants rights. Commercial permission requires a separate written agreement; keep `COMMERCIAL-LICENSING.md` consistent with that boundary.
+- Do not merge external copyrightable contributions until the maintainer confirms an appropriate contributor agreement or relicensing grant. Issue reports and non-confidential feedback do not transfer code rights.
 - Separate source evidence, local runtime evidence, and deployed-production evidence. Passing fixtures is not a scanner accuracy percentage or a security certificate.
 - Findings must trace controllable input through validation/authorization to a sensitive operation and effect. Inspect controls that can disprove the hypothesis.
 - Never add real credentials, client code, private reports, production data, or live-target probes to fixtures, issues, or commits.
@@ -32,4 +34,4 @@ Build shareable archives only with `scripts/build_skill_bundle.py`. It refuses t
 - Preserve user changes and keep fixes scoped to the root cause.
 - New scanner rules require a positive fixture and a negative control.
 - New security logic requires a regression test. Do not silence findings or weaken tests to obtain a pass.
-- Keep `README.md`, `docs/PRODUCT.md`, `docs/SCANNER.md`, `docs/QA.md`, package metadata, and bundled license consistent with observable behavior.
+- Keep `README.md`, `README.id.md`, `COMMERCIAL-LICENSING.md`, `docs/PRODUCT.md`, `docs/SCANNER.md`, `docs/QA.md`, package metadata, and bundled license consistent with observable behavior.

@@ -1,8 +1,34 @@
-# Bukti pengujian KodeWaspada 0.2.0
+# Bukti pengujian KodeWaspada 0.2.x
+
+## Rilis 0.2.1 — 4 November 2026
+
+Rilis ini memformalkan revisi instruksi evidence-first yang sebelumnya hanya berada di `main`, menambahkan jalur inquiry lisensi komersial terpisah, dan mempertahankan PolyForm Noncommercial 1.0.0 secara byte-identik pada paket publik. Halaman commercial licensing adalah proses inquiry, bukan kontrak atau izin otomatis.
+
+Lingkungan: Linux, Python 3.14.7, dan Semgrep Community Edition 1.179.0.
+
+| Gerbang | Hasil aktual |
+| --- | --- |
+| Unit, integrasi, renderer, rule, CLI, dan distribusi | **76 lulus, 0 gagal, 0 dilewati**; 8,049 detik waktu suite, 8,173 detik wall time |
+| Compile Python | `compileall` untuk `kodewaspada`/`scripts` dan `py_compile` fixture file-boundary lulus |
+| Validator skill | `Skill is valid!` pada source dan hasil ekstraksi ZIP |
+| Versi | Metadata project, runtime, wheel, dan CLI sama-sama `0.2.1` |
+| Lisensi publik | Root dan bundle identik; SHA-256 `ba07543136d2bf82a88598f86c4373bd3a94a0639419c971c623a499dd69d7b8` |
+| ZIP skill | CRC, sidecar, ekstraksi, validator, dan byte comparison dengan source lulus |
+| Wheel scanner | Build offline tanpa dependency, instalasi terisolasi lulus; kontrol menghasilkan 0 kandidat, 1 berkas, `completed`, exit 0 |
+
+| Artefak | Ukuran | SHA-256 |
+| --- | ---: | --- |
+| `kodewaspada-skill-0.2.1.zip` | 9.760 byte | `b47ccb42f87ed79eac5004c70b1188880acb80e5e03ce265e4f3cbeb67929031` |
+| `kodewaspada-skill-0.2.1.zip.sha256` | 94 byte | `262a70f5fd6424dde48c2967f27f8c85765a4a6ccae5aa0977f45e9d10030bbd` |
+| `kodewaspada-0.2.1-py3-none-any.whl` | 24.234 byte | `df04211a825cf56f9380bfbd7a496c44183a07f38b9eeb47339795e0eb645bda` |
+
+Dokumen root `COMMERCIAL-LICENSING.md` dan issue form penjualan tidak dimasukkan ke ZIP skill karena izin komersial hanya diberikan melalui perjanjian pembeli yang terpisah. Artefak publik tetap membawa lisensi nonkomersial lengkap.
+
+## Bukti historis rilis 0.2.0
 
 Tanggal: 2 November 2026. Lingkungan utama: Linux, Python 3.14.7, Node 26.8.1, dan Semgrep Community Edition 1.179.0. Hasil ini adalah bukti lokal pada revisi rilis, bukan sertifikasi, persentase akurasi, atau bukti keamanan aplikasi lain.
 
-## Ringkasan gerbang
+### Ringkasan gerbang
 
 | Gerbang | Hasil aktual |
 | --- | --- |
@@ -92,18 +118,18 @@ Simulasi CLI nyata yang tetap berlaku:
 
 Laporan HTML dibuka melalui loopback lokal pada lebar desktop 1.920 px dan ponsel 390 px. Tidak teramati overflow horizontal; ringkasan 3 kelompok tetap membuka detail 20 kandidat, navigasi keyboard ke bagian Cakupan berfungsi, dan tidak ada script/aset eksternal. Screenshot lokal ada di `outputs/screenshots/` dan tidak masuk paket rilis.
 
-## Revisi instruksi agent, 4 November 2026 (belum dirilis)
+## Evaluasi instruksi agent yang masuk rilis 0.2.1
 
 Instruksi utama kini memakai dua tahap: discovery permukaan berisiko lalu pembuktian kandidat terpenting. Review diff dimulai dari jalur yang berubah; review repo penuh mendahulukan akses data, perubahan state, file/network, dan input ke operasi sensitif. Kandidat yang diputus kontrol nyata dihentikan setelah jalur alternatif ke sink diperiksa. `SKILL.md` berisi 898 kata; ini ukuran instruksi, **bukan** pengukuran kecepatan atau akurasi agent.
 
-- Suite lokal terbaru: `python3 -m unittest discover -s tests -v` menghasilkan 76 lulus, 0 gagal, 0 dilewati dalam 8,456 detik.
+- Suite lokal sebelum pemaketan menghasilkan 76 lulus, 0 gagal, 0 dilewati dalam 8,456 detik; gerbang rilis final dicatat pada bagian `0.2.1` di atas.
 - `python3 -m compileall -q kodewaspada scripts` lulus; validator skill menghasilkan `Skill is valid!`.
 - Evaluator terpisah yang belum membaca rubrik pada `file-boundary.py` menemukan traversal pada pemeriksaan prefix string, menggugurkan payload yang sama pada `resolve()` + `relative_to()`, dan tidak mengklaim runtime/produksi. Fixture hanya direview sebagai source; evaluator tidak menjalankannya.
 - Pilot berizin pada checkout aplikasi privat menemukan kelemahan batas direktori dengan marker sintetis. Scanner tiga aturan JS/TS menghasilkan 0 kandidat dalam cakupannya; temuan berasal dari review manual, bukan scanner. Identitas aplikasi dan detail eksploit tidak dipublikasikan sebelum remediasi.
 - Satu pengukuran lokal Python 3.14.7/Semgrep CE 1.179.0 mencatat fixture 5 file selesai 2,077 detik dan frontend pilot privat 12 file selesai 2,280 detik; 99,6–99,8% waktu berada pada subprocess Semgrep. Ini satu run tanpa warm-up terkontrol, bukan benchmark stabil atau bukti agent lebih cepat.
-- Bundle pemeriksaan sementara dibangun dengan builder resmi; CRC ZIP, sidecar SHA-256 (`b47ccb42f87ed79eac5004c70b1188880acb80e5e03ce265e4f3cbeb67929031`), dan validator pada hasil ekstraksi lulus. Artefak ini hanya verifikasi lokal di `/tmp`, bukan rilis publik.
+- Bundle final dibangun dengan builder resmi; CRC ZIP, sidecar SHA-256 (`b47ccb42f87ed79eac5004c70b1188880acb80e5e03ce265e4f3cbeb67929031`), dan validator pada hasil ekstraksi lulus.
 
-Belum ada pengukuran waktu/token/biaya review agent, perbandingan reviewer manusia, atau efektivitas lintas beberapa repo nyata. Revisi ini belum masuk ZIP/wheel rilis `0.2.0`.
+Belum ada pengukuran waktu/token/biaya review agent, perbandingan reviewer manusia, atau efektivitas lintas beberapa repo nyata. Revisi instruksi dan versi scanner sudah masuk artefak `0.2.1`.
 
 ## Belum diverifikasi
 
@@ -112,4 +138,4 @@ Belum ada pengukuran waktu/token/biaya review agent, perbandingan reviewer manus
 - Stress runtime tepat di batas 20.000 entri, 16 MB output engine, 1.000 kandidat, timeout 120 detik, atau memori engine 512 MB.
 - Isolasi jaringan OS/packet capture, print fisik/PDF lengkap, pembaca layar, dan audit aksesibilitas menyeluruh.
 - False negative/efektivitas lintas repo dunia nyata, perbandingan reviewer manusia, validasi produksi, dependency audit lengkap, atau seluruh OWASP.
-- Integrasi API proprietary, hosting, GitHub publik, dukungan resmi OpenAI, serta penggunaan komersial. KodeWaspada tidak mengklaim hal-hal tersebut.
+- Integrasi API proprietary, hosting, dukungan resmi OpenAI, serta pelaksanaan kontrak atau pembayaran komersial nyata. KodeWaspada tidak mengklaim hal-hal tersebut.

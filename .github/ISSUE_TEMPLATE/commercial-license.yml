@@ -1,0 +1,49 @@
+name: Commercial license inquiry
+description: Start a public, non-binding inquiry for a separate commercial license.
+title: "[Commercial license inquiry] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use only information that is safe to publish. Do not post private source code, customer data, credentials, legal identity documents, payment details, or confidential contract terms. This inquiry does not grant commercial rights.
+  - type: dropdown
+    id: use_case
+    attributes:
+      label: General use case
+      description: Choose the closest public description. Detailed scope can move to an agreed private channel.
+      options:
+        - Internal company use
+        - Paid client services
+        - Integration into a paid product or service
+        - Commercial redistribution or embedding
+        - Other commercial use
+    validations:
+      required: true
+  - type: textarea
+    id: public_summary
+    attributes:
+      label: Public summary
+      description: Briefly describe the intended use without confidential details.
+      placeholder: We want to use KodeWaspada for...
+    validations:
+      required: true
+  - type: dropdown
+    id: support
+    attributes:
+      label: Support interest
+      options:
+        - License only
+        - License plus onboarding
+        - License plus customization or support
+        - Not sure yet
+    validations:
+      required: true
+  - type: checkboxes
+    id: acknowledgement
+    attributes:
+      label: Acknowledgements
+      options:
+        - label: I understand this issue is public and contains no confidential or sensitive information.
+          required: true
+        - label: I understand this inquiry is non-binding and grants no commercial-use rights.
+          required: true

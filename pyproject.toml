@@ -4,12 +4,17 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "kodewaspada"
-version = "0.2.0"
+version = "0.2.1"
 description = "Evidence-first security review agent and optional JavaScript/TypeScript taint scanner"
 requires-python = ">=3.10"
 license = "LicenseRef-PolyForm-Noncommercial-1.0.0"
 license-files = ["LICENSE"]
 readme = "docs/SCANNER.md"
+
+[project.urls]
+Repository = "https://github.com/gustiakmal52/kodewaspada"
+Issues = "https://github.com/gustiakmal52/kodewaspada/issues"
+"Commercial Licensing" = "https://github.com/gustiakmal52/kodewaspada/blob/main/COMMERCIAL-LICENSING.md"
 
 [project.scripts]
 kodewaspada = "kodewaspada.cli:main"
