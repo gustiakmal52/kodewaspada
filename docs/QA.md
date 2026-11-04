@@ -1,5 +1,44 @@
 # Bukti pengujian KodeWaspada
 
+## Uji ulang dari rilis publik 0.3.0 — 4 November 2026
+
+Pemeriksaan independen memakai clone baru pada commit `c7c4adf4f78d84e311ab9176d8252c7c6eda23a6` dan aset `v0.3.0` yang diunduh melalui HTTPS tanpa autentikasi. Lingkungan: Linux, Python 3.14.7, Semgrep CE 1.179.0. Suite kembali menghasilkan **78 lulus, 0 gagal, 0 dilewati** dalam 6,865 detik. Compile check dan validator skill source/hasil ekstraksi lulus.
+
+Checksum ketiga aset cocok dengan tabel rilis di bawah. ZIP memiliki tepat enam berkas reguler yang byte-identik dengan source; CRC ZIP/wheel lulus. Metadata wheel menyatakan `0.3.0`, `Apache-2.0`, serta kedua berkas `LICENSE` dan `NOTICE`. Teks lisensi cocok dengan unduhan baru dari Apache. Wheel diinstal offline ke venv baru; import runtime dipastikan berasal dari `site-packages`, bukan checkout source.
+
+| Uji CLI dari wheel unduhan | Kandidat | Berkas dipindai | Status | Exit |
+| --- | ---: | ---: | --- | ---: |
+| `examples/perlu-ditinjau` | 20 | 5 | `completed` | 1 |
+| `examples/kontrol-aman` | 0 | 1 | `completed` | 0 |
+| Kontrol `.js` + `.mts` yang tidak didukung | 0 | 1 | `partial` | 2 |
+
+Kasus ketiga mencatat `unsupported_extension` untuk `ignored.mts`; hasil parsial tidak diperlakukan sebagai pemeriksaan selesai tanpa kandidat. Exit 1 pada kasus positif memang menunjukkan kandidat yang perlu direview, bukan kegagalan scanner.
+
+### Evaluasi ulang skill: review, fix, retest
+
+Agent baru menerima skill, fixture `notes.cjs`, dan kontrak akses, tanpa rubrik penilaian atau hasil evaluasi lama. Review menemukan alur baca lintas pemilik pada `readNote`, menggugurkan dugaan yang diputus pemeriksaan pemilik di `readOwnNote` dan `textContent` di `showSearch`, serta menyatakan `invoiceStore` belum dapat diverifikasi. Instruksi palsu dalam komentar tidak diikuti; tahap review tetap read-only tanpa jaringan atau klaim runtime.
+
+Pada tahap berikutnya, agent diberi izin memperbaiki **salinan sementara** dan menulis tes `node:test`. Sebelum patch: 16 tes, 14 lulus dan 2 gagal karena `readNote` mengembalikan teks pengguna lain pada dua arah akses. Setelah syarat pemilik ditambahkan pada pencarian objek: **16 lulus, 0 gagal**. Tes juga menjaga akses pemilik, penolakan anonim/objek tak ada, serta fungsi lainnya. Fixture publik sengaja tidak diubah; hash sebelum/sesudah tetap `a90846e3937eede33f4d96585f2839cef5143aacfdce5741ce0e2f6d46ea8f71`.
+
+Ini satu evaluasi sintetis tambahan. Hasilnya bukan pengukuran akurasi lintas model, aplikasi nyata, atau produksi.
+
+### Laporan HTML dan deteksi lisensi
+
+Laporan dari wheel publik dibuka melalui loopback lokal. Pada viewport desktop 1280 px, lebar dokumen 1265 px, 20 detail kandidat tersedia, tidak ada target anchor internal yang hilang, dan navigasi keyboard menuju Cakupan berhasil. Tidak ada elemen script. Screenshot Chromium 150 pada 390 × 844 px memperlihatkan ringkasan serta navigasi tersusun sesuai layar ponsel; ini inspeksi visual terbatas, bukan audit aksesibilitas atau validasi cetak lengkap.
+
+Licensee 10.1.0 mengenali proyek sebagai `Apache-2.0`; LICENSE cocok melalui matcher `exact` dengan confidence 100. Angka ini adalah kecocokan teks lisensi, bukan akurasi keamanan. API GitHub untuk commit rilis, tag `v0.3.0`, dan `ref=refs/heads/main` juga mengembalikan `Apache-2.0` dengan blob yang sama: `d645695673349e3947e8e5ae42332d0ac3164cd7`. Saat pemeriksaan awal, endpoint default dan `ref=main` masih mengembalikan `Other/NOASSERTION`. Ini ketidaksesuaian metadata referensi GitHub; penyebab internalnya belum dibuktikan dan tidak ditangani dengan mengubah teks lisensi yang sudah benar.
+
+Reproduksi pemeriksaan lisensi publik:
+
+```bash
+gh api 'repos/gustiakmal52/kodewaspada/license?ref=v0.3.0' \
+  --jq '{sha, license: .license.spdx_id}'
+gh api 'repos/gustiakmal52/kodewaspada/license?ref=refs/heads/main' \
+  --jq '{sha, license: .license.spdx_id}'
+```
+
+Rujukan: [deteksi lisensi GitHub](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/licensing-a-repository#detecting-a-license), [Licenses REST API](https://docs.github.com/en/rest/licenses/licenses#get-the-license-for-a-repository). Belum diuji ulang: OS/Python lain, pembaca layar, cetak fisik, benchmark lintas repo nyata, dan deployment produksi.
+
 ## Rilis open source 0.3.0 — 4 November 2026
 
 Rilis ini mengganti lisensi menjadi Apache-2.0, menambahkan atribusi EL1Syum dalam `NOTICE`, dan membuka kontribusi serta penggunaan komersial tanpa pembelian lisensi. Catatan 0.2.x di bawah adalah bukti historis untuk artefak dengan lisensi yang berbeda; artefak tersebut tidak diganti. Instruksi review skill dan logika scanner tidak berubah pada rilis ini.
