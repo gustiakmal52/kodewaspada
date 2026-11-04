@@ -1,31 +1,37 @@
-# Gerbang distribusi 0.2.x
+# Release checklist
 
-Dokumen ini menjaga agar paket publik konsisten dengan PolyForm Noncommercial, jalur lisensi komersial terpisah, dan bukti pengujian. Ia bukan pengganti teks `LICENSE` atau perjanjian pembeli.
+Starting with **0.3.0**, KodeWaspada is open source under Apache-2.0. Releases before 0.3.0 retain the license files shipped with those releases; do not replace their artifacts or rewrite their tags.
 
-## Risiko riwayat pengembangan
+## Source and attribution
 
-Dua commit pada checkout pengembangan lama sebelum `0.2.0` memakai lisensi MIT. Riwayat publik `main` sudah dimulai ulang dari snapshot bersih dan tidak memuat commit lama tersebut. **Jangan merge atau push branch pengembangan lama ke riwayat publik** jika syarat nonkomersial ingin dipertahankan. Lisensi yang sudah diterima pihak lain biasanya tidak dapat ditarik kembali hanya dengan mengganti berkas pada commit berikutnya.
+Create release branches from the current public `origin/main`. The older development checkout may contain private material and unrelated changes: do not merge it into the public branch or use `git push --all` / `git push --mirror`.
 
-Untuk pembaruan publik berikutnya, buat branch dari `origin/main` yang bersih. Branch lokal lama `codex/kodewaspada-v01` hanya arsip privat: jangan menggabungkannya ke branch publik dan jangan memakai `git push --all` atau `git push --mirror`. Jangan menghapus atau menulis ulang riwayat lama tanpa keputusan pemilik.
+1. Keep root `LICENSE` byte-identical to the official [Apache-2.0 text](https://www.apache.org/licenses/LICENSE-2.0.txt) and `skills/kodewaspada/LICENSE`.
+2. Keep root `NOTICE` and `skills/kodewaspada/NOTICE` identical. Preserve the EL1Syum copyright and attribution, together with any applicable contributor notices.
+3. Check that README, package metadata, product/scanner documentation, and release assets all describe the same version and license. A paid license is not required for commercial use of 0.3.0 or later under Apache-2.0.
+4. Keep third-party components under their own licenses. Semgrep is installed separately; the release does not relicense or bundle the engine.
 
-## Pemeriksaan sebelum berbagi
+## Build and verify
 
-1. Pastikan root `LICENSE` dan `skills/kodewaspada/LICENSE` identik, berisi PolyForm Noncommercial 1.0.0, serta memuat `Required Notice: Copyright 2026 EL1Syum`.
-2. Pastikan README, `COMMERCIAL-LICENSING.md`, metadata paket, dokumentasi produk/scanner, dan arsip tidak menyebut MIT atau mengklaim proyek sebagai open source OSI.
-3. Jalankan seluruh tes, compile check, validator skill, evaluasi perilaku independen, dan pemindaian keamanan yang dicatat di `docs/QA.md`.
-4. Dengan Python 3.11+ di Linux/WSL untuk script builder, bangun ZIP skill memakai `python3 scripts/build_skill_bundle.py`; jangan membuat ZIP manual. Builder menolak jalur output yang dapat diganti akun lain atau memiliki ACL tambahan, memeriksa digest kanonis pada byte lisensi yang benar-benar diarsipkan, mempertahankan descriptor/inode untuk penulisan/ukuran/hash, dan tidak menimpa output. ZIP baru dianggap lengkap setelah command sukses dan sidecar SHA-256 tersedia. Verifikasi sidecar serta isi satu folder teratas `kodewaspada/`.
-5. Untuk snapshot source, gunakan hanya file terlacak pada commit rilis. Jangan sertakan `.git`, `.env`, output laporan, wheel lama, cache, atau artefak `0.1.x`.
-6. Uji ekstraksi kedua arsip di direktori sementara dan jalankan validator dari hasil ekstraksi. Bandingkan daftar file serta checksum dengan source rilis.
-7. Catat versi, commit source privat, checksum, lingkungan uji, hasil aktual, dan pemeriksaan yang dilewati. Jangan menyebut rilis siap bila gerbang yang wajib gagal.
+Run the required checks from [AGENTS.md](../AGENTS.md), then record actual results in [QA.md](QA.md). Run independent behavioral evaluations from [evals](../evals/README.md) when skill behavior changes; a license-only update does not change the review instructions.
 
-## Lisensi komersial
+```bash
+python3 -m unittest discover -s tests -v
+python3 -m compileall -q kodewaspada scripts
+python3 /path/to/skill-creator/scripts/quick_validate.py skills/kodewaspada
+python3 scripts/build_skill_bundle.py
+python3 -m pip wheel . --no-deps --no-build-isolation --wheel-dir outputs/wheels
+```
 
-Artefak publik selalu membawa PolyForm Noncommercial dan required notice yang sama. Bila pembeli memperoleh hak komersial, perjanjian terpisah harus menunjuk versi, commit, atau checksum yang dicakup; jangan mengganti lisensi di ZIP publik atau menganggap pembayaran tanpa kontrak sebagai izin.
+The skill builder requires Python 3.11+ and Linux/WSL. It enforces an exact file allowlist, canonical license/notice digests, safe output paths, and descriptor-based writes. It refuses existing outputs. Do not replace it with a manual ZIP command.
 
-Sebelum menerima kontribusi berhak cipta dari pihak luar, pastikan ada contributor agreement atau grant yang memang mengizinkan distribusi publik dan lisensi komersial terpisah. Issue, feedback, dan laporan bug bukan otomatis transfer hak cipta.
+- Verify the ZIP CRC and SHA-256 sidecar, extract it to a temporary directory, compare every file against the skill source, and validate the extracted skill.
+- Inspect the wheel metadata and its bundled `LICENSE` and `NOTICE`; install it in an isolated environment and run the CLI version check and negative-control scan.
+- Publish only tracked source from the release commit. Exclude `.git`, secrets, private reports, caches, and previous build outputs.
+- Create a new tag on the reviewed public commit, attach the tested artifacts, and download them again to verify their hashes. Record skipped checks honestly.
 
-## Bahasa publikasi
+## Public wording
 
-Gunakan: **“KodeWaspada adalah skill source-available untuk review keamanan kode. Rilis publik mengizinkan penggunaan nonkomersial; lisensi komersial terpisah dapat diminta berdasarkan perjanjian tertulis.”**
+Describe KodeWaspada as an **open-source security-review skill for developers building with AI**, maintained by EL1Syum. Credit contributors and link to the repository.
 
-Jangan gunakan: “open source”, “resmi OpenAI”, “didukung Daybreak”, “menjamin aman”, “nol false positive”, atau persentase akurasi yang diturunkan dari fixture.
+Keep claims tied to observed results: fixture passes are not an accuracy percentage, security certification, or proof of production safety. Compatibility does not imply endorsement or official affiliation with OpenAI, Codex Security, or Daybreak.

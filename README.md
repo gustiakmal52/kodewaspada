@@ -2,15 +2,16 @@
 
 **Evidence-first security review for developers building with AI coding agents.**
 
-[![Source Available](https://img.shields.io/badge/license-PolyForm%20Noncommercial-6f42c1)](LICENSE)
-[![Commercial Licensing](https://img.shields.io/badge/commercial-license%20by%20agreement-d97706)](COMMERCIAL-LICENSING.md)
+[![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-6f42c1)](LICENSE)
 [![Focus](https://img.shields.io/badge/focus-AppSec%20%2B%20AI%20Coding-0a7f5a)](#what-it-does)
 [![Skill](https://img.shields.io/badge/format-Agent%20Skill-2563eb)](skills/kodewaspada/SKILL.md)
 [![Language](https://img.shields.io/badge/README-English-111827)](#kodewaspada)
 
 [**Bahasa Indonesia**](README.id.md)
 
-KodeWaspada is an actively developed **blue-team security review agent/skill** for OpenAI Codex and coding assistants that support compatible Agent Skills. It is designed to make code-security review less dependent on confident-sounding guesses and more dependent on traceable evidence.
+KodeWaspada is an actively developed **open-source blue-team security review agent/skill** for OpenAI Codex and coding assistants that support compatible Agent Skills. It is designed to make code-security review less dependent on confident-sounding guesses and more dependent on traceable evidence.
+
+Created and maintained by **[EL1Syum (@gustiakmal52)](https://github.com/gustiakmal52)**. Free to use, modify, and distribute, including commercially, under Apache License 2.0 starting with `0.3.0`.
 
 The core workflow is:
 
@@ -182,7 +183,7 @@ Full scanner coverage requires the documented Semgrep dependency. See [docs/SCAN
 
 ## Contributing
 
-External review and proposals are welcome, especially when they improve the evidence model rather than merely increasing the number of warnings. Copyrightable pull requests are not merged until the contributor-rights process described in [CONTRIBUTING.md](CONTRIBUTING.md) is satisfied.
+External review, pull requests, and proposals are welcome, especially when they improve the evidence model rather than merely increasing the number of warnings. Contributions use Apache License 2.0, and contributors retain their copyright. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 Useful proposals include:
 
@@ -199,24 +200,24 @@ For discussion, see the open feedback issue: [real-world AppSec review cases](ht
 
 If KodeWaspada improves your security-review workflow, consider **starring the repository** so other developers can find it.
 
-## Commercial licensing
+## Commercial use
 
-The public repository remains available under PolyForm Noncommercial 1.0.0. Companies, consultancies, paid products, and other commercial users can [request a quote for a separate written commercial license](COMMERCIAL-LICENSING.md).
+Starting with `0.3.0`, companies, consultancies, and paid products can use KodeWaspada under Apache License 2.0 without purchasing a license or requesting separate permission. Commercial redistribution is allowed under the same license obligations.
 
-Commercial permission is not automatic: an inquiry or quote grants no rights until the buyer and copyright holder execute a written agreement and satisfy any agreed payment condition. Pricing is scope-based; no fixed public price or bundled support is promised.
+Paid onboarding, customization, or support can be agreed separately; none is required to use the project, and no support or SLA is included by default. See [commercial use and earlier releases](COMMERCIAL-LICENSING.md).
 
 ## License
 
-KodeWaspada's original instructions, wrapper, rules, examples, and documentation are available under the [PolyForm Noncommercial License 1.0.0](LICENSE) with:
+Starting with `0.3.0`, KodeWaspada's original instructions, wrapper, rules, examples, and documentation are available under [Apache License 2.0](LICENSE):
 
 ~~~text
-Required Notice: Copyright 2026 EL1Syum
+Copyright 2026 EL1Syum
 ~~~
 
-This repository is **source-available, not OSI open source**. Noncommercial use, copying, modification, and redistribution are allowed within the public license terms. Commercial use requires a [separate written commercial license](COMMERCIAL-LICENSING.md) from the copyright holder.
+You may use, modify, and redistribute the project, including in commercial products. When redistributing, include [LICENSE](LICENSE), retain applicable attribution and [NOTICE](NOTICE) content, and identify modified files as required by Apache-2.0. The license does not grant trademark rights or imply endorsement. Earlier releases retain the license shipped with them; see [the transition note](COMMERCIAL-LICENSING.md).
 
 Semgrep is a separate upstream dependency and is not bundled as the project's own engine.
 
 ---
 
-**Maintainer:** [gustiakmal52](https://github.com/gustiakmal52)
+**Created and maintained by:** [EL1Syum (@gustiakmal52)](https://github.com/gustiakmal52)

@@ -2,12 +2,13 @@
 
 **Security review untuk developer yang ngoding dengan AI: cari bukti, perbaiki akar masalah, lalu retest.**
 
-[![Source Available](https://img.shields.io/badge/license-PolyForm%20Noncommercial-6f42c1)](LICENSE)
-[![Lisensi Komersial](https://img.shields.io/badge/komersial-lisensi%20tertulis-d97706)](COMMERCIAL-LICENSING.md)
+[![Lisensi: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-6f42c1)](LICENSE)
 [![Security Review](https://img.shields.io/badge/focus-AppSec%20%2B%20AI%20Coding-0a7f5a)](#yang-dibantu)
 [![Language](https://img.shields.io/badge/docs-Bahasa%20Indonesia-dc2626)](#kodewaspada)
 
-KodeWaspada adalah **security review agent/skill blue-team** untuk OpenAI Codex dan coding assistant yang mendukung format Agent Skills kompatibel. Ia membantu agent menelusuri alur kode, membedakan dugaan dari bukti, memperbaiki root cause saat diminta, dan menguji ulang hasilnya.
+KodeWaspada adalah **security review agent/skill blue-team open source** untuk OpenAI Codex dan coding assistant yang mendukung format Agent Skills kompatibel. Ia membantu agent menelusuri alur kode, membedakan dugaan dari bukti, memperbaiki root cause saat diminta, dan menguji ulang hasilnya.
+
+Dibuat dan dikelola oleh **[EL1Syum (@gustiakmal52)](https://github.com/gustiakmal52)**. Mulai versi `0.3.0`, bebas dipakai, dimodifikasi, dan dibagikan, termasuk secara komersial, sesuai Apache License 2.0. [English README](README.md).
 
 ### Mulai dalam 30 detik
 
@@ -30,15 +31,15 @@ Tunjukkan bukti, dampak, dan batas analisis. Jangan ubah kode dulu.
 
 > Proyek komunitas independen. Bukan produk resmi, afiliasi, dukungan, sertifikasi, atau integrasi keamanan dari OpenAI maupun Daybreak.
 
-**KodeWaspada adalah proyek security tooling yang dikembangkan aktif**, dengan fokus pada review kode yang evidence-first, false-positive aware, fix-aware, dan retest-aware. Distribusinya bersifat source-available untuk penggunaan nonkomersial. Skill adalah instruksi untuk agent, bukan model AI baru dan bukan jaminan aplikasi aman.
+**KodeWaspada adalah proyek security tooling yang dikembangkan aktif**, dengan fokus pada review kode yang evidence-first, false-positive aware, fix-aware, dan retest-aware. Mulai versi `0.3.0`, proyek menggunakan lisensi open source Apache-2.0. Skill adalah instruksi untuk agent, bukan model AI baru dan bukan jaminan aplikasi aman.
 
-Jika proyek ini membantu workflow Anda, **star repo ini** agar lebih mudah ditemukan lagi. Masukan, kasus sintetis, dan usulan yang meningkatkan kualitas bukti sangat dihargai. Pull request berhak cipta baru dapat digabungkan setelah proses hak kontributor pada [CONTRIBUTING.md](CONTRIBUTING.md) terpenuhi.
+Jika proyek ini membantu workflow Anda, **star repo ini** agar lebih mudah ditemukan lagi. Masukan, kasus sintetis, dan pull request yang meningkatkan kualitas bukti sangat dihargai. Kontribusi menggunakan Apache-2.0 dan hak cipta tetap dimiliki kontributor; lihat [CONTRIBUTING.md](CONTRIBUTING.md).
 
-## Lisensi komersial bila dibutuhkan
+## Penggunaan komersial
 
-Repository publik tetap tersedia berdasarkan PolyForm Noncommercial 1.0.0. Perusahaan, konsultan, produk berbayar, dan pengguna komersial lain dapat [meminta quotation untuk lisensi komersial tertulis yang terpisah](COMMERCIAL-LICENSING.md).
+Mulai versi `0.3.0`, perusahaan, konsultan, produk berbayar, dan pengguna komersial lain boleh memakai KodeWaspada sesuai Apache License 2.0 tanpa membeli lisensi atau meminta izin terpisah. Redistribusi komersial juga diperbolehkan dengan memenuhi kewajiban lisensi.
 
-Membuka inquiry atau menerima quotation belum memberikan hak komersial. Izin baru berlaku setelah pembeli dan pemegang hak menandatangani perjanjian serta memenuhi syarat pembayaran yang disepakati. Harga ditentukan berdasarkan ruang lingkup; tidak ada harga publik tetap atau support bawaan yang dijanjikan.
+Onboarding, kustomisasi, atau dukungan berbayar dapat disepakati terpisah; tidak wajib untuk memakai proyek dan tidak ada support atau SLA bawaan. Lihat [catatan penggunaan komersial dan rilis terdahulu](COMMERCIAL-LICENSING.md).
 
 ## Yang dibantu
 
@@ -127,11 +128,11 @@ python3 -m unittest discover -s tests -v
 
 Tes scanner membutuhkan Semgrep untuk cakupan penuh; lihat panduannya. Perubahan aturan perlu contoh positif dan negatif. Perubahan skill perlu kasus yang memperlihatkan keputusan lebih baik, termasuk saat dugaan harus gugur. Jangan memakai data klien sebagai fixture.
 
-## Lisensi publik, komersial, dan berbagi
+## Lisensi dan berbagi
 
-Instruksi, wrapper, aturan asli, contoh, dan dokumentasi KodeWaspada tersedia di bawah [PolyForm Noncommercial License 1.0.0](LICENSE) dengan `Required Notice: Copyright 2026 EL1Syum`. Ini lisensi **source-available**, bukan lisensi open-source OSI.
+Mulai versi `0.3.0`, instruksi, wrapper, aturan asli, contoh, dan dokumentasi KodeWaspada tersedia di bawah [Apache License 2.0](LICENSE), dengan `Copyright 2026 EL1Syum`.
 
-Anda boleh memakai, menyalin, mengubah, dan membagikan proyek untuk tujuan nonkomersial yang diizinkan lisensi. Saat membagikan salinan atau perubahan, sertakan ketentuan lisensi atau URL resminya dan pertahankan baris `Required Notice`. Menjual kembali, memasukkan KodeWaspada ke produk atau layanan berbayar, atau penggunaan komersial lain memerlukan [lisensi komersial tertulis terpisah](COMMERCIAL-LICENSING.md) dari pemegang hak. Ringkasan ini bukan pengganti teks lisensi.
+Anda boleh memakai, menyalin, mengubah, dan membagikan proyek, termasuk untuk bisnis dan produk berbayar. Saat mendistribusikan, sertakan [LICENSE](LICENSE), pertahankan atribusi dan isi [NOTICE](NOTICE) yang berlaku, serta tandai berkas yang dimodifikasi sesuai Apache-2.0. Lisensi tidak memberikan hak merek dagang atau menyatakan dukungan pemilik. Rilis terdahulu tetap mengikuti lisensi yang disertakan pada rilis tersebut; lihat [catatan transisi](COMMERCIAL-LICENSING.md). Ringkasan ini bukan pengganti teks lisensi.
 
 Sebelum membuat rilis atau repo publik, ikuti [gerbang distribusi](docs/RELEASE.md). Riwayat pengembangan lokal sebelum `0.2.0` masih memuat lisensi lama dan tidak disiapkan untuk dipublikasikan.
 

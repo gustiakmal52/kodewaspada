@@ -1,6 +1,32 @@
-# Bukti pengujian KodeWaspada 0.2.x
+# Bukti pengujian KodeWaspada
 
-## Rilis 0.2.1 — 4 November 2026
+## Rilis open source 0.3.0 — 4 November 2026
+
+Rilis ini mengganti lisensi menjadi Apache-2.0, menambahkan atribusi EL1Syum dalam `NOTICE`, dan membuka kontribusi serta penggunaan komersial tanpa pembelian lisensi. Catatan 0.2.x di bawah adalah bukti historis untuk artefak dengan lisensi yang berbeda; artefak tersebut tidak diganti. Instruksi review skill dan logika scanner tidak berubah pada rilis ini.
+
+Lingkungan: Linux, Python 3.14.7, Semgrep Community Edition 1.179.0, setuptools 78.1.1.
+
+| Gerbang | Hasil aktual |
+| --- | --- |
+| Unit, integrasi, renderer, rule, CLI, dan distribusi | **78 lulus, 0 gagal, 0 dilewati**; 7,154 detik |
+| Compile Python | `compileall` untuk `kodewaspada`/`scripts` dan `py_compile` fixture file-boundary lulus |
+| Validator skill | `Skill is valid!` pada source dan hasil ekstraksi ZIP |
+| Lisensi | Root dan bundled `LICENSE` byte-identik dengan teks Apache-2.0 resmi; SHA-256 `cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30` |
+| Atribusi | Root dan bundled `NOTICE` identik; SHA-256 `54ae0183a7e9432f384311b4d29731049486e7ae65e4d00c27276fe2739e2082` |
+| Proteksi distribusi | NOTICE hilang, tidak cocok, atau dimutasi sesudah precheck ditolak; kasus lisensi, race, ACL, symlink, dan batas ukuran tetap lulus |
+| ZIP skill | Enam berkas; CRC, sidecar, ekstraksi, validator, dan byte comparison dengan source lulus |
+| Wheel scanner | Build offline, CRC, metadata `0.3.0`/`Apache-2.0`, LICENSE/NOTICE kanonis, dan instalasi venv terpisah lulus; kontrol 1 berkas menghasilkan 0 kandidat, `completed`, exit 0 |
+| Tautan dan diff | 57 tautan Markdown lokal valid; `git diff --check` lulus |
+
+| Artefak | Ukuran | SHA-256 |
+| --- | ---: | --- |
+| `kodewaspada-skill-0.3.0.zip` | 12.163 byte | `e056c61057e2f10c74eeb5599367a0751d5ed2d02e76c75330d2e884efa9b645` |
+| `kodewaspada-skill-0.3.0.zip.sha256` | 94 byte | `42a05a6845b2858f4d313f16862cb6d745abe01332f7fab3eb171316a70e3426` |
+| `kodewaspada-0.3.0-py3-none-any.whl` | 26.740 byte | `ba83f4ef13b2fd38809c94416b4257a3d49e0e0cdf6f69537a0adbb378d01551` |
+
+Evaluasi perilaku agent dan pengujian browser tidak diulang karena instruksi skill, renderer, dan aturan scanner tidak berubah. Hasil historis tetap dibatasi pada cakupan yang dicatat, bukan bukti akurasi universal atau keamanan produksi.
+
+## Bukti historis rilis 0.2.1 — 4 November 2026
 
 Rilis ini memformalkan revisi instruksi evidence-first yang sebelumnya hanya berada di `main`, menambahkan jalur inquiry lisensi komersial terpisah, dan mempertahankan PolyForm Noncommercial 1.0.0 secara byte-identik pada paket publik. Halaman commercial licensing adalah proses inquiry, bukan kontrak atau izin otomatis.
 
@@ -43,7 +69,7 @@ Tanggal: 2 November 2026. Lingkungan utama: Linux, Python 3.14.7, Node 26.8.1, d
 | ZIP skill final | CRC lulus, checksum sidecar lulus, hasil ekstraksi byte-identik dengan source |
 | Wheel scanner | Dibangun, dipasang tanpa dependency/jaringan, versi 0.2.0, kontrol menghasilkan exit 0 |
 
-## Paket skill
+## Paket skill historis 0.2.0
 
 Produk utama berada di `skills/kodewaspada` dan berisi tepat lima berkas: `SKILL.md`, dua referensi, metadata UI, serta lisensi. Membaca dan memakai instruksi skill tidak membutuhkan package Python, Semgrep, MCP, backend KodeWaspada, atau API tambahan.
 

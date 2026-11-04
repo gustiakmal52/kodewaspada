@@ -94,7 +94,7 @@ Contoh hanya untuk dibaca scanner. Jangan menjalankan berkas contoh JavaScript. 
 
 ## Lisensi dan rujukan
 
-Wrapper, panduan, dan aturan asli menggunakan [PolyForm Noncommercial License 1.0.0](../LICENSE) dengan `Required Notice: Copyright 2026 EL1Syum`. Anda boleh memakai, menyalin, mengubah, dan membagikannya untuk tujuan nonkomersial yang diizinkan lisensi. Penggunaan komersial atau penjualan kembali memerlukan [lisensi komersial tertulis terpisah](../COMMERCIAL-LICENSING.md) dari pemegang hak. Ini lisensi source-available, bukan lisensi open-source OSI; teks lisensi lengkap tetap menjadi rujukan.
+Mulai versi `0.3.0`, wrapper, panduan, dan aturan asli menggunakan [Apache License 2.0](../LICENSE) dengan `Copyright 2026 EL1Syum`. Anda boleh memakai, menyalin, mengubah, dan membagikannya, termasuk untuk penggunaan komersial tanpa membeli lisensi terpisah. Saat mendistribusikan, sertakan lisensi, pertahankan atribusi dan isi [NOTICE](../NOTICE) yang berlaku, serta tandai berkas yang dimodifikasi sesuai Apache-2.0. Rilis terdahulu tetap mengikuti lisensi yang disertakan; lihat [catatan transisi](../COMMERCIAL-LICENSING.md).
 
 Semgrep adalah dependensi terpisah dengan lisensi upstream sendiri. Repo tidak menyertakan engine biner atau menyalin rule pack registry; periksa kewajiban dependensi sebelum mendistribusikan paket gabungan.
 

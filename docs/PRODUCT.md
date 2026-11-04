@@ -2,7 +2,7 @@
 
 ## Produk utama: skill untuk sesi coding
 
-KodeWaspada adalah skill source-available yang memandu asisten AI meninjau keamanan kode bersama pembuat aplikasi. Rilis publik memakai PolyForm Noncommercial 1.0.0; pemegang hak dapat menawarkan lisensi komersial tertulis secara terpisah. Ia dirancang untuk OpenAI Codex dan asisten coding lain yang mendukung format Agent Skills yang kompatibel. Panduan utama ada di [skills/kodewaspada/SKILL.md](../skills/kodewaspada/SKILL.md). Pengguna tetap bekerja di asisten coding yang biasa dipakai; tidak perlu dashboard atau layanan cloud baru dari KodeWaspada.
+KodeWaspada adalah skill open source yang memandu asisten AI meninjau keamanan kode bersama pembuat aplikasi. Mulai versi `0.3.0`, rilis menggunakan Apache License 2.0 yang mengizinkan penggunaan komersial. Ia dirancang untuk OpenAI Codex dan asisten coding lain yang mendukung format Agent Skills yang kompatibel. Panduan utama ada di [skills/kodewaspada/SKILL.md](../skills/kodewaspada/SKILL.md). Pengguna tetap bekerja di asisten coding yang biasa dipakai; tidak perlu dashboard atau layanan cloud baru dari KodeWaspada.
 
 Skill berisi cara kerja dan standar bukti, bukan model AI baru atau agent yang berjalan sendiri. Asisten yang menjalankannya perlu dapat membaca kode proyek dan mengikuti instruksi skill. Dukungan pemasangan berbeda antar-asisten; mengikuti format skill tidak membuktikan semua asisten akan berperilaku sama.
 
@@ -34,11 +34,11 @@ Cakupan panduan juga mencakup pemisahan data antar-pengguna/tim, input yang dapa
 
 Tiga aturan scanner tidak memeriksa autentikasi, IDOR, RLS, malware, dependency CVE, atau seluruh risiko aplikasi. Hasil scanner adalah bahan review, bukan keputusan akhir atau skor aman. Lolos fixture juga bukan persentase akurasi pada proyek nyata.
 
-## Model lisensi ganda
+## Lisensi open source
 
-KodeWaspada boleh dipakai, disalin, diubah, dan dibagikan untuk tujuan nonkomersial yang diizinkan [PolyForm Noncommercial License 1.0.0](../LICENSE). Setiap salinan atau perubahan yang dibagikan harus menyertakan ketentuan lisensi atau URL resminya dan mempertahankan `Required Notice: Copyright 2026 EL1Syum`.
+Mulai versi `0.3.0`, KodeWaspada boleh dipakai, disalin, diubah, dan dibagikan, termasuk untuk tujuan komersial, sesuai [Apache License 2.0](../LICENSE). Saat mendistribusikan, sertakan lisensi, pertahankan atribusi dan isi [NOTICE](../NOTICE) yang berlaku, serta tandai berkas yang dimodifikasi. Atribusi proyek tetap `Copyright 2026 EL1Syum`.
 
-Proyek ini tidak boleh dijual kembali, dimasukkan ke produk atau layanan berbayar, atau digunakan untuk tujuan komersial tanpa lisensi tertulis terpisah dari pemegang hak. Calon pengguna komersial dapat [meminta quotation](../COMMERCIAL-LICENSING.md); inquiry atau quotation tidak memberi hak sebelum ada perjanjian tertulis. Harga dan cakupan ditentukan berdasarkan kebutuhan, tanpa janji harga publik, support, atau SLA bawaan. Ringkasan ini bukan pengganti teks lisensi. PolyForm Noncommercial adalah lisensi source-available, bukan lisensi open-source OSI.
+Perusahaan, konsultan, dan produk berbayar tidak perlu membeli lisensi atau meminta izin terpisah. Kontribusi diterima di bawah Apache-2.0 dan kontributor mempertahankan hak ciptanya. Layanan onboarding, kustomisasi, atau dukungan dapat disepakati terpisah; tidak menjadi syarat pemakaian dan tidak ada SLA bawaan. Rilis terdahulu mempertahankan lisensi yang disertakan; lihat [catatan penggunaan komersial](../COMMERCIAL-LICENSING.md). Ringkasan ini bukan pengganti teks lisensi.
 
 ## Privasi dan batas klaim
 
@@ -48,7 +48,7 @@ KodeWaspada menyediakan alur kerja defensif: review, perbaikan, dan uji ulang. I
 
 ## Status dan langkah validasi
 
-Paket publik disiapkan sebagai proyek source-available berlisensi [PolyForm Noncommercial License 1.0.0](../LICENSE). Lisensi komersial, bila disepakati, adalah dokumen terpisah yang menunjuk versi atau artefak yang dicakup. Lisensi engine Semgrep tetap terpisah dan dijelaskan di panduan scanner.
+Paket publik mulai `0.3.0` adalah proyek open source berlisensi [Apache License 2.0](../LICENSE). Lisensi engine Semgrep tetap terpisah dan dijelaskan di panduan scanner.
 
 Tiga evaluasi perilaku sintetis sudah memeriksa keputusan dasar skill: membedakan kontrol aman dari akses lintas akun, menemukan otorisasi dan SQL injection berbukti source, menggugurkan dugaan XSS pada `textContent`, menilai batas direktori file secara kanonis, menolak instruksi palsu dalam komentar, serta tidak mengklaim implementasi yang tidak tersedia. Hasil dan batasnya dicatat di [QA](QA.md) serta [evals](../evals/README.md).
 

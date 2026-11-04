@@ -1,13 +1,13 @@
 # KodeWaspada contributor instructions
 
-KodeWaspada is a source-available blue-team skill for coding assistants. Public use is governed by PolyForm Noncommercial 1.0.0; the copyright holder may separately offer paid commercial licenses. The primary product is `skills/kodewaspada/`; the Python/Semgrep scanner is optional supporting evidence for three JavaScript/TypeScript flows.
+KodeWaspada is an open-source blue-team skill for coding assistants. Releases from `0.3.0` use Apache License 2.0, including commercial use. The primary product is `skills/kodewaspada/`; the Python/Semgrep scanner is optional supporting evidence for three JavaScript/TypeScript flows.
 
 ## Invariants
 
 - Do not claim affiliation, endorsement, or official integration with OpenAI, Codex Security, or Daybreak. Compatibility with an Agent Skills format is not endorsement.
-- Do not call the project open source while the PolyForm Noncommercial license applies. Preserve the exact root and bundled-skill license notices.
-- Do not imply that a commercial inquiry, quote, or payment grants rights. Commercial permission requires a separate written agreement; keep `COMMERCIAL-LICENSING.md` consistent with that boundary.
-- Do not merge external copyrightable contributions until the maintainer confirms an appropriate contributor agreement or relicensing grant. Issue reports and non-confidential feedback do not transfer code rights.
+- Preserve the root and bundled-skill Apache-2.0 LICENSE and NOTICE files. Earlier releases retain the license shipped with them.
+- Commercial use does not require a paid license or separate agreement. Keep `COMMERCIAL-LICENSING.md` consistent with Apache-2.0 permissions and obligations.
+- Contributions are accepted under Apache-2.0; contributors retain their copyright. Do not add material the contributor is not authorized to license.
 - Separate source evidence, local runtime evidence, and deployed-production evidence. Passing fixtures is not a scanner accuracy percentage or a security certificate.
 - Findings must trace controllable input through validation/authorization to a sensitive operation and effect. Inspect controls that can disprove the hypothesis.
 - Never add real credentials, client code, private reports, production data, or live-target probes to fixtures, issues, or commits.

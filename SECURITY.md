@@ -4,7 +4,7 @@ KodeWaspada membantu review keamanan, sehingga laporan tentang kelemahan pada sk
 
 ## Versi yang didukung
 
-Versi `0.2.x` adalah jalur rilis yang didukung. Versi `0.1.x` adalah prototipe lokal dan tidak didukung untuk distribusi. Tidak ada SLA atau sertifikasi keamanan kecuali disepakati secara tertulis dalam layanan terpisah.
+Versi `0.3.x` adalah jalur rilis yang didukung. Pengguna `0.2.x` disarankan memperbarui; versi `0.1.x` adalah prototipe lokal dan tidak didukung untuk distribusi. Tidak ada SLA atau sertifikasi keamanan kecuali disepakati secara tertulis dalam layanan terpisah.
 
 ## Melaporkan masalah
 
@@ -24,4 +24,4 @@ Jangan menguji sistem pihak lain, credential nyata, atau target produksi atas na
 
 Pemilik akan menilai bukti, meminta konteks minimum bila perlu, dan mengklasifikasikan temuan sebagai terbukti, perlu verifikasi, atau gugur. Jadwal respons/perbaikan belum memiliki SLA. Publikasi terkoordinasi hanya dilakukan setelah perbaikan atau mitigasi tersedia dan tidak membocorkan data sensitif.
 
-Lisensi publik nonkomersial tetap berlaku pada penggunaan dan distribusi kode; pelaporan kerentanan tidak memberikan hak komersial tambahan. Jalur lisensi berbayar dijelaskan terpisah di [COMMERCIAL-LICENSING.md](COMMERCIAL-LICENSING.md).
+Mulai versi `0.3.0`, penggunaan dan distribusi kode mengikuti [Apache License 2.0](LICENSE), termasuk penggunaan komersial. Rilis terdahulu tetap mengikuti lisensi yang disertakan pada rilis tersebut; lihat [catatan transisi](COMMERCIAL-LICENSING.md).

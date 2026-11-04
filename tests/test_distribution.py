@@ -30,6 +30,7 @@ class DistributionTests(unittest.TestCase):
         (source / "references").mkdir(parents=True)
         (source / "SKILL.md").write_text("---\nname: kodewaspada\n---\n", encoding="utf-8")
         (source / "LICENSE").write_bytes((ROOT / "LICENSE").read_bytes())
+        (source / "NOTICE").write_bytes((ROOT / "NOTICE").read_bytes())
         (source / "agents" / "openai.yaml").write_text("interface: {}\n", encoding="utf-8")
         (source / "references" / "fix-and-retest.md").write_text("synthetic fix reference\n", encoding="utf-8")
         (source / "references" / "review-patterns.md").write_text("synthetic review reference\n", encoding="utf-8")
@@ -48,11 +49,15 @@ class DistributionTests(unittest.TestCase):
             self.assertEqual(sum(PurePosixPath(name).name.casefold() == "skill.md" for name in names), 1)
             self.assertIn("kodewaspada/SKILL.md", names)
             self.assertIn("kodewaspada/LICENSE", names)
+            self.assertIn("kodewaspada/NOTICE", names)
             self.assertIn("kodewaspada/agents/openai.yaml", names)
             self.assertIn("kodewaspada/references/fix-and-retest.md", names)
             bundled_license = archive.read("kodewaspada/LICENSE")
             self.assertEqual(bundled_license, (ROOT / "LICENSE").read_bytes())
-            self.assertIn(b"Required Notice: Copyright 2026 EL1Syum", bundled_license)
+            self.assertIn(b"Apache License", bundled_license)
+            bundled_notice = archive.read("kodewaspada/NOTICE")
+            self.assertEqual(bundled_notice, (ROOT / "NOTICE").read_bytes())
+            self.assertIn(b"Copyright 2026 EL1Syum", bundled_notice)
             for info in archive.infolist():
                 self.assertEqual(info.date_time, bundle.ZIP_TIMESTAMP)
                 self.assertFalse(stat.S_ISLNK(info.external_attr >> 16))
@@ -88,6 +93,7 @@ class DistributionTests(unittest.TestCase):
         (repo / "pyproject.toml").write_text('[project]\nversion = "9.8.7"\n', encoding="utf-8")
         release_license = (ROOT / "LICENSE").read_bytes()
         (repo / "LICENSE").write_bytes(release_license)
+        (repo / "NOTICE").write_bytes((ROOT / "NOTICE").read_bytes())
         (source / "LICENSE").write_bytes(release_license)
         with patch.object(bundle, "REPO_ROOT", repo), redirect_stdout(io.StringIO()):
             self.assertEqual(bundle.main([]), 0)
@@ -252,10 +258,12 @@ class DistributionTests(unittest.TestCase):
                 target.write_bytes(path.read_bytes())
         (repo / "pyproject.toml").write_text('[project]\nversion = "1.0.0"\n', encoding="utf-8")
         (repo / "LICENSE").write_text("different\n", encoding="utf-8")
-        with patch.object(bundle, "REPO_ROOT", repo), redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
+        (repo / "NOTICE").write_bytes((ROOT / "NOTICE").read_bytes())
+        with patch.object(bundle, "REPO_ROOT", repo), redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()) as stderr:
             with self.assertRaises(SystemExit) as caught:
                 bundle.main([])
         self.assertEqual(caught.exception.code, 2)
+        self.assertIn("LICENSE root dan bundle", stderr.getvalue())
 
     def test_release_builder_rejects_matching_but_incomplete_license(self):
         repo = self.root / "repo"
@@ -270,19 +278,60 @@ class DistributionTests(unittest.TestCase):
                 target.parent.mkdir(parents=True, exist_ok=True)
                 target.write_bytes(path.read_bytes())
         (repo / "pyproject.toml").write_text('[project]\nversion = "1.0.0"\n', encoding="utf-8")
-        incomplete = (
-            b"Required Notice: Copyright 2026 EL1Syum\n\n"
-            b"# PolyForm Noncommercial License 1.0.0\n\n"
-            b"https://polyformproject.org/licenses/noncommercial/1.0.0\n"
-        )
+        incomplete = b"Apache License\nVersion 2.0, January 2004\nhttp://www.apache.org/licenses/\n"
         (repo / "LICENSE").write_bytes(incomplete)
         (source / "LICENSE").write_bytes(incomplete)
-        with patch.object(bundle, "REPO_ROOT", repo), redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
+        (repo / "NOTICE").write_bytes((ROOT / "NOTICE").read_bytes())
+        with patch.object(bundle, "REPO_ROOT", repo), redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()) as stderr:
             with self.assertRaises(SystemExit) as caught:
                 bundle.main([])
         self.assertEqual(caught.exception.code, 2)
+        self.assertIn("LICENSE root dan bundle", stderr.getvalue())
 
-    def test_license_mutation_after_precheck_is_rejected(self):
+    def test_bundle_rejects_missing_or_modified_notice(self):
+        source = self.make_skill()
+        notice = source / "NOTICE"
+        notice.unlink()
+        output = self.root / "missing-notice.zip"
+        with self.assertRaisesRegex(bundle.BundleError, "NOTICE"):
+            bundle.build_bundle(source, output)
+        self.assertFalse(output.exists())
+        self.assertFalse(bundle.sidecar_path(output).exists())
+
+        notice.write_text("MODIFIED NOTICE\n", encoding="utf-8")
+        output = self.root / "modified-notice.zip"
+        with self.assertRaisesRegex(bundle.BundleError, "NOTICE"):
+            bundle.build_bundle(source, output)
+        self.assertFalse(output.exists())
+        self.assertFalse(bundle.sidecar_path(output).exists())
+
+    def test_release_builder_rejects_noncanonical_notice(self):
+        repo = self.root / "repo"
+        source = repo / "skills" / "kodewaspada"
+        shutil.copytree(self.make_skill(), source)
+        (repo / "LICENSE").write_bytes((ROOT / "LICENSE").read_bytes())
+        (repo / "pyproject.toml").write_text('[project]\nversion = "1.0.0"\n', encoding="utf-8")
+        canonical_notice = (ROOT / "NOTICE").read_bytes()
+        root_notice, skill_notice = repo / "NOTICE", source / "NOTICE"
+        for targets in ((root_notice,), (skill_notice,), (root_notice, skill_notice)):
+            for replacement in (None, b"MODIFIED NOTICE\n"):
+                with self.subTest(targets=targets, replacement=replacement):
+                    root_notice.write_bytes(canonical_notice)
+                    skill_notice.write_bytes(canonical_notice)
+                    for target in targets:
+                        if replacement is None:
+                            target.unlink()
+                        else:
+                            target.write_bytes(replacement)
+                    with (patch.object(bundle, "REPO_ROOT", repo),
+                          redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()) as stderr):
+                        with self.assertRaises(SystemExit) as caught:
+                            bundle.main([])
+                    self.assertEqual(caught.exception.code, 2)
+                    self.assertIn("NOTICE", stderr.getvalue())
+                    self.assertFalse((repo / "outputs").exists())
+
+    def test_license_and_notice_mutation_after_precheck_are_rejected(self):
         repo = self.root / "repo"
         source = repo / "skills" / "kodewaspada"
         source.parent.mkdir(parents=True)
@@ -296,20 +345,25 @@ class DistributionTests(unittest.TestCase):
                 target.write_bytes(path.read_bytes())
         (repo / "pyproject.toml").write_text('[project]\nversion = "0.2.0"\n', encoding="utf-8")
         (repo / "LICENSE").write_bytes((ROOT / "LICENSE").read_bytes())
-        output = self.root / "mutated-license.zip"
+        (repo / "NOTICE").write_bytes((ROOT / "NOTICE").read_bytes())
+        for name in ("LICENSE", "NOTICE"):
+            output = self.root / f"mutated-{name.lower()}.zip"
 
-        def mutate_license(_):
-            (source / "LICENSE").write_text("MODIFIED AFTER VALIDATION\n", encoding="utf-8")
-            return "0.2.0"
+            def mutate_text(_):
+                (source / name).write_text("MODIFIED AFTER VALIDATION\n", encoding="utf-8")
+                return "0.2.0"
 
-        with (patch.object(bundle, "REPO_ROOT", repo),
-              patch.object(bundle, "read_version", side_effect=mutate_license),
-              redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO())):
-            with self.assertRaises(SystemExit) as caught:
-                bundle.main(["--output", str(output)])
-        self.assertEqual(caught.exception.code, 2)
-        self.assertFalse(output.exists())
-        self.assertFalse(bundle.sidecar_path(output).exists())
+            with (self.subTest(name=name), patch.object(bundle, "REPO_ROOT", repo),
+                  patch.object(bundle, "read_version", side_effect=mutate_text) as version_reader,
+                  redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()) as stderr):
+                with self.assertRaises(SystemExit) as caught:
+                    bundle.main(["--output", str(output)])
+            version_reader.assert_called_once()
+            self.assertEqual(caught.exception.code, 2)
+            self.assertIn(f"{name} yang akan diarsipkan", stderr.getvalue())
+            self.assertFalse(output.exists())
+            self.assertFalse(bundle.sidecar_path(output).exists())
+            (source / name).write_bytes((ROOT / name).read_bytes())
 
 
 if __name__ == "__main__":

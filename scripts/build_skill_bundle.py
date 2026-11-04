@@ -21,6 +21,7 @@ ARCHIVE_ROOT = "kodewaspada"
 EXPECTED_SKILL_FILES = frozenset(
     {
         "LICENSE",
+        "NOTICE",
         "SKILL.md",
         "agents/openai.yaml",
         "references/fix-and-retest.md",
@@ -32,7 +33,8 @@ MAX_FILE_SIZE = 25 * 1024 * 1024
 MAX_ARCHIVE_SIZE = 50 * 1024 * 1024
 ZIP_TIMESTAMP = (1980, 1, 1, 0, 0, 0)
 _VERSION = re.compile(r"[A-Za-z0-9][A-Za-z0-9._+-]*\Z")
-RELEASE_LICENSE_SHA256 = "ba07543136d2bf82a88598f86c4373bd3a94a0639419c971c623a499dd69d7b8"
+RELEASE_LICENSE_SHA256 = "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+RELEASE_NOTICE_SHA256 = "54ae0183a7e9432f384311b4d29731049486e7ae65e4d00c27276fe2739e2082"
 
 
 class BundleError(ValueError):
@@ -157,9 +159,12 @@ def _write_archive(handle, files: list[tuple[str, Path]]) -> None:
         archive.writestr(_zip_info(f"{ARCHIVE_ROOT}/", directory=True), b"")
         for archive_name, source_path in files:
             data = _read_regular_file(source_path)
-            if (archive_name == f"{ARCHIVE_ROOT}/LICENSE"
-                    and hashlib.sha256(data).hexdigest() != RELEASE_LICENSE_SHA256):
-                raise BundleError("LICENSE yang akan diarsipkan tidak cocok dengan teks rilis kanonis.")
+            expected_digest = {
+                f"{ARCHIVE_ROOT}/LICENSE": RELEASE_LICENSE_SHA256,
+                f"{ARCHIVE_ROOT}/NOTICE": RELEASE_NOTICE_SHA256,
+            }.get(archive_name)
+            if expected_digest and hashlib.sha256(data).hexdigest() != expected_digest:
+                raise BundleError(f"{archive_name} yang akan diarsipkan tidak cocok dengan teks rilis kanonis.")
             archive.writestr(_zip_info(archive_name), data)
             if archive.fp is not None and archive.fp.tell() > MAX_ARCHIVE_SIZE:
                 raise BundleError(f"ZIP melebihi batas {MAX_ARCHIVE_SIZE} byte.")
@@ -265,11 +270,11 @@ def _validate_output_parent(parent: Path) -> tuple[int, int]:
 
 
 def _validate_release_license() -> None:
-    root_license = (REPO_ROOT / "LICENSE").read_bytes()
-    skill_license = (REPO_ROOT / "skills" / ARCHIVE_ROOT / "LICENSE").read_bytes()
-    digest = hashlib.sha256(root_license).hexdigest()
-    if root_license != skill_license or digest != RELEASE_LICENSE_SHA256:
-        raise BundleError("Lisensi root dan bundle harus identik dengan teks rilis PolyForm Noncommercial yang ditinjau.")
+    for name, expected_digest in (("LICENSE", RELEASE_LICENSE_SHA256), ("NOTICE", RELEASE_NOTICE_SHA256)):
+        root_text = (REPO_ROOT / name).read_bytes()
+        skill_text = (REPO_ROOT / "skills" / ARCHIVE_ROOT / name).read_bytes()
+        if root_text != skill_text or hashlib.sha256(root_text).hexdigest() != expected_digest:
+            raise BundleError(f"{name} root dan bundle harus identik dengan teks rilis Apache-2.0 yang ditinjau.")
 
 
 def build_bundle(source: Path, output: Path) -> tuple[Path, Path, str]:
