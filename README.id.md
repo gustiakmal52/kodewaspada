@@ -29,6 +29,12 @@ Tunjukkan bukti, dampak, dan batas analisis. Jangan ubah kode dulu.
 - Retest-aware: tidak mengklaim lulus sebelum pengujian benar-benar dijalankan.
 - Ada scanner opsional untuk beberapa pola taint JS/TS, tetapi skill tetap bisa dipakai tanpa Python atau Semgrep.
 
+## Performa: review terarah, scanner terukur
+
+Untuk review diff, skill mengarahkan agent mulai dari kode yang berubah lalu mengikuti caller, pemeriksaan izin, dan operasi sensitif yang terhubung. Untuk repo penuh, instruksinya meminta satu peta risiko sebelum mendalami kandidat terpenting. Referensi pola dibaca hanya jika relevan. Scanner opsional dapat diarahkan ke folder JS/TS terkait, dengan batas cakupan folder tersebut dinyatakan dalam laporan.
+
+Pada satu laptop Linux (Intel i5-1155G7, Python 3.14.7, Semgrep CE 1.179.0), lima run lokal pada fixture lima berkas masing-masing memindai kelima berkas dan menghasilkan 20 kandidat. Median waktu scanner dengan field waktu saat ini **2,376 detik** (rentang **2,277–2,626 detik**). Durasi tampil di CLI serta laporan JSON, HTML, dan Markdown. [Metode dan batas pengukuran](docs/QA.md#performance-check). Angka ini hanya untuk scanner opsional pada file sintetis, bukan waktu review agent, bukti percepatan, atau performa di proyek lain.
+
 > Proyek komunitas independen. Bukan produk resmi, afiliasi, dukungan, sertifikasi, atau integrasi keamanan dari OpenAI maupun Daybreak.
 
 **KodeWaspada adalah proyek security tooling yang dikembangkan aktif**, dengan fokus pada review kode yang evidence-first, false-positive aware, fix-aware, dan retest-aware. Mulai versi `0.3.0`, proyek menggunakan lisensi open source Apache-2.0. Skill adalah instruksi untuk agent, bukan model AI baru dan bukan jaminan aplikasi aman.

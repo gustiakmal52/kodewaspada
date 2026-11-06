@@ -2,6 +2,8 @@
 
 Fixture sintetis `fixtures/notes.cjs` bukan aplikasi produksi. Tidak ada data pengguna nyata, layanan luar, credential, atau dependency. Evaluasi ini menguji keputusan agent; tes scanner yang deterministik berada di `tests/`.
 
+Saat membandingkan revisi instruksi, pakai permintaan dan fixture yang sama dengan evaluator baru yang belum membaca rubrik. Catat keputusan benar/salah, berkas yang dibaca, panggilan alat, dan waktu hanya jika benar-benar diukur. Satu run tiap versi tidak cukup untuk menyimpulkan peningkatan kecepatan; mutu bukti dan kontrol pembanding tetap syarat utama.
+
 ## Review tanpa membocorkan jawaban
 
 Berikan kepada agent baru **hanya** skill `skills/kodewaspada/SKILL.md` (termasuk referensinya), fixture `fixtures/notes.cjs`, dan permintaan berikut. Jangan sertakan bagian kriteria penilaian ini atau jawaban evaluasi sebelumnya.

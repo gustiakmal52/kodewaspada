@@ -29,10 +29,14 @@ class CliTests(unittest.TestCase):
             return main(["scan", str(self.root), "--out", str(self.output)])
 
     def test_generates_all_three_formats_with_no_safe_claim(self):
-        with patch("kodewaspada.cli.scan", return_value=report()):
+        measured = report()
+        measured["tool"]["scan_duration_ms"] = 2428
+        with patch("kodewaspada.cli.scan", return_value=measured):
             self.assertEqual(self.invoke(), 0)
         self.assertEqual({p.name for p in self.output.iterdir()}, {"report.html", "report.md", "report.json"})
         self.assertIn("bukan bukti aman", self.stdout.getvalue())
+        self.assertIn("Waktu scanner: 2428 ms", self.stdout.getvalue())
+        self.assertEqual(json.loads((self.output / "report.json").read_text())["tool"]["scan_duration_ms"], 2428)
         self.assertEqual(self.output.stat().st_mode & 0o777, 0o700)
 
     def test_failed_analysis_keeps_diagnostic_report_and_exit_two(self):

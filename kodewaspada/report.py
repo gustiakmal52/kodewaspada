@@ -161,6 +161,8 @@ def render_html(report: dict) -> str:
     )
     detail = "".join(_finding_html(finding, number) for number, finding in enumerate(findings, 1))
     tool = report["tool"]
+    duration = tool.get("scan_duration_ms")
+    timing = f'<br>Waktu scanner: {_text(duration)} ms (sebelum penulisan laporan)' if type(duration) is int and duration >= 0 else ''
     return f"""<!doctype html>
 <html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
@@ -174,7 +176,7 @@ def render_html(report: dict) -> str:
 <main id="ringkasan"><header><p class="eyebrow">Pemeriksaan kode / {_text(status)}</p>
 <h1>Lihat risikonya.<br>Pahami langkah berikutnya.</h1>
 <p class="project">Proyek: <strong>{_text(report['project']['name'])}</strong></p>
-<p class="meta">Dibuat {_text(report['created_at'])}<br>Mesin: {_text(tool['engine'])} {_text(tool['engine_version'])}</p>
+<p class="meta">Dibuat {_text(report['created_at'])}<br>Mesin: {_text(tool['engine'])} {_text(tool['engine_version'])}{timing}</p>
 <div class="verdict"><strong>{_text(title)}</strong><p>{_text(summary)}</p></div></header>
 {('<ol class="jump-list" aria-label="Ringkasan kandidat menurut aturan">' + items + '</ol>') if items else ''}
 <section id="cakupan" aria-labelledby="cakupan-title"><h2 id="cakupan-title">Apa yang benar-benar diperiksa?</h2>
@@ -199,10 +201,13 @@ def render_markdown(report: dict) -> str:
     diagnostics_truncated = any(item.get("type") == "diagnostic_limit" for item in coverage.get("errors", []))
     title, summary = _summary(report)
     tool = report["tool"]
+    duration = tool.get("scan_duration_ms")
+    timing = [f"Waktu scanner: {duration} ms (sebelum penulisan laporan)"] if type(duration) is int and duration >= 0 else []
     parts = [
         "# Laporan KodeWaspada",
         f"Proyek: **{_markdown(report['project']['name'])}**",
         f"Dibuat: {_markdown(report['created_at'])}  \nMesin: {_markdown(tool['engine'])} {_markdown(tool['engine_version'])} · KodeWaspada {_markdown(tool['version'])}",
+        *timing,
         f"Status: **{_STATUS.get(report.get('status'), 'Status pemeriksaan tidak dikenal')}**",
         f"## {title}\n\n{summary}",
         "## Cakupan",

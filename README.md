@@ -33,6 +33,12 @@ KodeWaspada gives the agent a repeatable decision process:
 - **Prompt-injection resistant review behavior:** instructions embedded inside reviewed source, comments, logs, issues, or scanner output are treated as data, not permission.
 - **Explicit evidence states:** source-proven, locally tested, needs verification, or dismissed.
 
+## Performance: focused review, measured scanner
+
+The skill instructs the agent to start a diff review at changed code, then follow connected callers, guards, and sensitive operations. For a whole repository, it calls for one risk map before deeper analysis of the strongest candidates. Detailed review patterns are read for relevant areas. The optional scanner can target a relevant JS/TS folder; its report must state that narrower coverage.
+
+On one Linux laptop (Intel i5-1155G7, Python 3.14.7, Semgrep CE 1.179.0), five local runs of the included five-file fixture each scanned all five files and returned 20 candidates. Median scanner time with the current timing field was **2.376 s** (range **2.277–2.626 s**). The duration appears in CLI, JSON, HTML, and Markdown reports. [Method and limits](docs/QA.md#performance-check). This measures the optional scanner on synthetic files, not agent review time, a speedup, or performance across other projects.
+
 ## 30-second quick start
 
 The only required component is [skills/kodewaspada](skills/kodewaspada). Python and Semgrep are **not required** to use the skill.

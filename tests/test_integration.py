@@ -18,6 +18,7 @@ class EndToEndTests(unittest.TestCase):
         report = self.scan_sources({"route.js": "function route(req) { eval(req.query.code); }", "control.ts": "const result = JSON.parse('{}');"})
         self.assertEqual(report["status"], "completed")
         self.assertEqual(report["coverage"]["scanned_files"], 2)
+        self.assertGreaterEqual(report["tool"]["scan_duration_ms"], 0)
         self.assertEqual(len(report["findings"]), 1)
         self.assertEqual(report["findings"][0]["rule_id"], "kw-request-eval")
         self.assertEqual(report["findings"][0]["status"], "needs_review")

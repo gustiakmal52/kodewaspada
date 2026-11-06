@@ -39,6 +39,9 @@ def main(argv=None):
     count = len(report["findings"])
     print(f"KodeWaspada: {count} kandidat perlu ditinjau; status analisis: {report['status']}.")
     print(f"Cakupan: {report['coverage']['scanned_files']} berkas; {report['coverage']['rule_count']} aturan.")
+    duration = report["tool"].get("scan_duration_ms")
+    if type(duration) is int and duration >= 0:
+        print(f"Waktu scanner: {duration} ms (sebelum penulisan laporan).")
     print("Buka report.html di folder output. Jangan publikasikan laporan proyek privat tanpa meninjaunya.")
     print("Nol kandidat bukan bukti aman. Kontrol akses, RLS, dependensi, dan rahasia belum diperiksa.")
     return 2 if report["status"] != "completed" else (1 if count else 0)

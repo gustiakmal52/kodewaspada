@@ -1,5 +1,49 @@
 # Bukti pengujian KodeWaspada
 
+## Performance check
+
+7 November 2026, clone bersih dari `ce6c783` sebelum revisi instruksi dan instrumentasi waktu pada sesi ini. Lingkungan: Linux x86_64, Intel i5-1155G7 (8 logical CPU), RAM 7,5 GiB, Python 3.14.7, Semgrep CE 1.179.0. Lima pemanggilan berurutan `kodewaspada.scanner.scan("examples/perlu-ditinjau")` diukur dengan `time.perf_counter()`; `_run_engine` dibungkus sementara untuk mengukur bagian subprocess. Tidak ada perubahan aturan atau engine. Tiap run berstatus `completed`, memindai 5 berkas, dan menghasilkan 20 kandidat yang sama.
+
+| Run | Total scanner | Subprocess Semgrep |
+| --- | ---: | ---: |
+| 1 | 4,085 dtk | 4,080 dtk |
+| 2 | 2,425 dtk | 2,423 dtk |
+| 3 | 2,373 dtk | 2,372 dtk |
+| 4 | 2,428 dtk | 2,427 dtk |
+| 5 | 2,529 dtk | 2,524 dtk |
+| **Median** | **2,428 dtk** | **2,427 dtk** |
+
+Setelah field `tool.scan_duration_ms` ditambahkan tanpa mengubah pemilihan berkas atau aturan, lima run berikutnya menghasilkan waktu eksternal **2479, 2323, 2376, 2626, dan 2277 ms**. Median **2376 ms** (2,376 detik), rentang **2277–2626 ms**; field laporan cocok dengan pengukuran eksternal dalam 0–1 ms. Kelima run tetap `completed` dengan 5 berkas dan 20 kandidat. Perbandingan dua rangkaian ini terpengaruh warm-up dan aktivitas mesin; selisih median tidak membuktikan percepatan.
+
+Reproduksi waktu total tanpa mengubah repo:
+
+```bash
+python3 - <<'PY'
+from statistics import median
+from time import perf_counter
+from kodewaspada.scanner import scan
+
+times = []
+for _ in range(5):
+    start = perf_counter()
+    report = scan("examples/perlu-ditinjau")
+    assert report["status"] == "completed"
+    assert report["coverage"]["scanned_files"] == 5
+    assert len(report["findings"]) == 20
+    assert report["tool"]["scan_duration_ms"] >= 0
+    times.append(perf_counter() - start)
+print(f"median={median(times):.3f}s; runs={[round(t, 3) for t in times]}")
+PY
+```
+
+Run pertama lebih lama; pengaruh warm-up dan aktivitas mesin belum dipisahkan. Hampir seluruh waktu pada fixture kecil berada di subprocess Semgrep. Eksperimen terpisah pada 180 berkas sintetis menunjukkan worker paralel lebih cepat pada sebagian run, tetapi urutan run tidak dikontrol dan dampak memorinya belum diukur. Karena itu `--jobs=1` tetap dipakai. Angka di atas hanya waktu scanner pada satu mesin dan fixture sintetis, bukan waktu review agent atau performa proyek lain.
+
+### Evaluasi instruksi agent setelah revisi
+
+Evaluator independen yang tidak diberi rubrik meninjau tiga fixture sintetis tanpa menjalankan kode, mengubah file, membaca environment, atau mengakses jaringan. Pada `notes.cjs`, versi sebelum revisi dan sesudah revisi sama-sama menemukan `readNote`, menggugurkan dugaan pada `readOwnNote` dan `showSearch`, serta menahan penilaian `readInvoice` karena implementasi store tidak tersedia. Waktu yang dilaporkan masing-masing 21 dan 20 detik pada satu run; ini tidak membuktikan percepatan. Evaluasi setelah revisi juga menemukan perubahan plan tanpa izin dan raw SQL pada `admin-and-input.cjs`, sambil menggugurkan `adminChangePlan`, `boundUserSearch`, dan `exportReport` menurut kontrak fixture. Pada `file-boundary.py`, evaluator menemukan traversal di `unsafe_asset` dan menggugurkan dugaan pada kontrol kanonis `safe_asset`. Tidak ada klaim runtime atau produksi. Fixture tidak diubah.
+
+Gerbang lokal sesudah seluruh revisi: `python3 -m unittest discover -s tests -v` menghasilkan **79 lulus, 0 gagal, 0 dilewati** dalam 9,362 detik; `python3 -m compileall -q kodewaspada scripts` lulus; validator skill mengembalikan `Skill is valid!`; `git diff --check` bersih. CLI lokal pada `examples/kontrol-aman` menghasilkan `completed`, 1 file, 0 kandidat, dan durasi 2372 ms yang tampil di CLI/JSON/HTML/Markdown. Ini memverifikasi regresi lokal dan format skill, bukan performa atau akurasi agent lintas aplikasi.
+
 ## Uji ulang dari rilis publik 0.3.0 — 4 November 2026
 
 Pemeriksaan independen memakai clone baru pada commit `c7c4adf4f78d84e311ab9176d8252c7c6eda23a6` dan aset `v0.3.0` yang diunduh melalui HTTPS tanpa autentikasi. Lingkungan: Linux, Python 3.14.7, Semgrep CE 1.179.0. Suite kembali menghasilkan **78 lulus, 0 gagal, 0 dilewati** dalam 6,865 detik. Compile check dan validator skill source/hasil ekstraksi lulus.

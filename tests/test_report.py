@@ -66,6 +66,14 @@ class ReportTests(unittest.TestCase):
         self.assertIn("Baris 12", html)
         self.assertIn("12–14", html)
 
+    def test_measured_scanner_time_is_labeled_and_optional(self):
+        self.report["tool"]["scan_duration_ms"] = 2428
+        for rendered in (render_html(self.report), render_markdown(self.report)):
+            self.assertIn("Waktu scanner: 2428 ms (sebelum penulisan laporan)", rendered)
+        del self.report["tool"]["scan_duration_ms"]
+        self.assertNotIn("Waktu scanner:", render_html(self.report))
+        self.assertNotIn("Waktu scanner:", render_markdown(self.report))
+
     def test_html_escapes_all_dynamic_text(self):
         hostile = '\"><script>alert(1)</script><img src=x onerror=alert(2)>'
         for key in ("id", "rule_id", "title", "priority", "path", "explanation", "impact", "fix", "verify", "ai_prompt", "limitation"):
