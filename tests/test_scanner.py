@@ -223,6 +223,7 @@ class ScanFailures(unittest.TestCase):
             report = scanner.scan(folder)
         self.assertEqual(report["status"], "failed")
         self.assertEqual(report["coverage"]["errors"][0]["type"], "no_sources")
+        self.assertGreaterEqual(report["tool"]["scan_duration_ms"], 0)
 
     def test_engine_failure_is_failed_not_clean(self):
         with tempfile.TemporaryDirectory() as folder:
@@ -230,6 +231,7 @@ class ScanFailures(unittest.TestCase):
             with patch.object(scanner, "_run_engine", side_effect=RuntimeError("SYNTHETIC_SECRET")):
                 report = scanner.scan(folder)
         self.assertEqual(report["status"], "failed")
+        self.assertGreaterEqual(report["tool"]["scan_duration_ms"], 0)
         self.assertNotIn("SYNTHETIC_SECRET", json.dumps(report))
 
 

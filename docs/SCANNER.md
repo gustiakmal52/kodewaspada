@@ -28,6 +28,10 @@ Untuk proyek sendiri:
 python3 -m kodewaspada scan /path/ke/proyek-anda --out outputs/review-pertama
 ```
 
+Untuk pemeriksaan terarah, `path` dapat menunjuk folder JS/TS yang relevan. Laporan itu hanya mencakup folder tersebut; jangan membacanya sebagai hasil untuk seluruh repo. Catatan waktu pada fixture lokal ada di [QA](QA.md#performance-check). Pengaturan `--jobs=1` dipertahankan untuk membatasi proses engine paralel; pengukuran singkat dengan lebih banyak worker belum cukup stabil untuk mengklaim percepatan.
+
+CLI dan laporan JSON/HTML/Markdown menampilkan `scan_duration_ms`: waktu staging, pemanggilan engine, normalisasi, dan pembersihan sementara. Durasi ini tidak mencakup penulisan laporan atau waktu review agent. Waktu satu run dapat berubah karena startup engine dan kondisi mesin; gunakan pengukuran berulang sebelum membandingkan revisi.
+
 Gunakan folder output baru setiap kali. Folder yang sudah ada atau berupa symlink ditolak; laporan lama tidak ditimpa. Folder output dibuat dengan izin `0700`. Hasil tetap dapat memuat nama proyek dan berkas yang sensitif; tinjau sebelum membagikannya.
 
 ## Tiga aturan

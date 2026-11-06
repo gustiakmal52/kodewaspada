@@ -9,6 +9,7 @@ import signal
 import stat
 import subprocess
 import tempfile
+from time import perf_counter
 import unicodedata
 
 from . import __version__
@@ -245,6 +246,7 @@ def scan(root):
     if Path(engine).resolve().is_relative_to(root):
         raise ValueError("Engine di dalam proyek target tidak dijalankan. Gunakan instalasi Semgrep terpisah.")
     guidance = json.loads(GUIDANCE.read_text(encoding="utf-8"))
+    started = perf_counter()
     report = {"schema_version": 1, "tool": {"name": "KodeWaspada", "version": __version__,
               "engine": "Semgrep CE", "engine_version": "unknown"},
               "project": {"name": display_path(root.name)}, "created_at": datetime.now(timezone.utc).isoformat(),
@@ -260,16 +262,17 @@ def scan(root):
         report["coverage"].update(discovered_files=discovered, skipped=skipped, errors=errors)
         if not included:
             errors.append({"type": "no_sources", "message": "Tidak ada sumber JavaScript/TypeScript yang dapat diperiksa."})
-            return report
-        try:
-            payload = _run_engine(engine, stage, temporary)
-            findings, diagnostics, scanned = normalize(payload, stage, set(included), guidance)
-            report["findings"] = findings
-            report["coverage"]["scanned_files"] = scanned
-            errors.extend(diagnostics)
-            version = payload.get("version", "unknown")
-            report["tool"]["engine_version"] = display_path(str(version))[:40]
-            report["status"] = "partial" if errors else "completed"
-        except (OSError, RuntimeError, ValueError, TypeError, AttributeError):
-            errors.append({"type": "engine_failure", "message": "Analisis tidak selesai. Periksa instalasi engine dan coba folder yang lebih kecil; tidak ada kesimpulan aman."})
+        else:
+            try:
+                payload = _run_engine(engine, stage, temporary)
+                findings, diagnostics, scanned = normalize(payload, stage, set(included), guidance)
+                report["findings"] = findings
+                report["coverage"]["scanned_files"] = scanned
+                errors.extend(diagnostics)
+                version = payload.get("version", "unknown")
+                report["tool"]["engine_version"] = display_path(str(version))[:40]
+                report["status"] = "partial" if errors else "completed"
+            except (OSError, RuntimeError, ValueError, TypeError, AttributeError):
+                errors.append({"type": "engine_failure", "message": "Analisis tidak selesai. Periksa instalasi engine dan coba folder yang lebih kecil; tidak ada kesimpulan aman."})
+    report["tool"]["scan_duration_ms"] = round((perf_counter() - started) * 1000)
     return report

@@ -34,6 +34,8 @@ Cakupan panduan juga mencakup pemisahan data antar-pengguna/tim, input yang dapa
 
 Tiga aturan scanner tidak memeriksa autentikasi, IDOR, RLS, malware, dependency CVE, atau seluruh risiko aplikasi. Hasil scanner adalah bahan review, bukan keputusan akhir atau skor aman. Lolos fixture juga bukan persentase akurasi pada proyek nyata.
 
+Untuk menjaga kerja agent tetap terarah, review diff dimulai dari kode yang berubah dan alur terkait; review repo penuh memetakan risiko sekali sebelum mendalami kandidat utama. Scanner opsional dapat dibatasi ke folder JS/TS yang relevan, dan laporan harus menyebut cakupan tersebut. Durasi scanner ditampilkan di CLI dan laporan; pengukuran lokal serta batas klaim performanya dicatat di [QA](QA.md#performance-check). Waktu review agent bergantung pada host dan belum memiliki benchmark lintas proyek.
+
 ## Lisensi open source
 
 Mulai versi `0.3.0`, KodeWaspada boleh dipakai, disalin, diubah, dan dibagikan, termasuk untuk tujuan komersial, sesuai [Apache License 2.0](../LICENSE). Saat mendistribusikan, sertakan lisensi, pertahankan atribusi dan isi [NOTICE](../NOTICE) yang berlaku, serta tandai berkas yang dimodifikasi. Atribusi proyek tetap `Copyright 2026 EL1Syum`.
