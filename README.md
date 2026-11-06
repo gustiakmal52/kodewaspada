@@ -221,3 +221,21 @@ Semgrep is a separate upstream dependency and is not bundled as the project's ow
 ---
 
 **Created and maintained by:** [EL1Syum (@gustiakmal52)](https://github.com/gustiakmal52)
+
+---
+
+## Visual workflow
+
+![KodeWaspada review workflow with evidence labels, optional scanner and local validation, and separately requested fix or retest.](docs/assets/kodewaspada-workflow.svg)
+
+The coding assistant applies the skill to the requested scope: discover risky surfaces, trace input through real controls to an effect, classify the evidence, and report impact and coverage. Local validation depends on authorization and an available test environment. Fix and Retest follow the requested mode.
+
+The four evidence labels describe what is supported; they are separate from severity. The optional JS/TS scanner supplies candidates for review through three rules: shell execution, `eval` / `Function`, and raw HTML output.
+
+### Example agent collaboration
+
+![Example host arrangement with a coordinator, scoped review roles, returned evidence, reconciliation, and one evidence-classified report.](docs/assets/kodewaspada-agent-collaboration.svg)
+
+This shows one way a host coding assistant can distribute review work when it supports multiple agents. Roles, scheduling, and tool access come from the host; KodeWaspada provides the review guidance and evidence standard. A single coding assistant can use the same skill.
+
+See the [visual guide and source map](docs/VISUAL-WORKFLOW.md) for the text equivalents, requested Fix/Retest paths, and the implemented scanner pipeline. [Panduan Bahasa Indonesia](docs/VISUAL-WORKFLOW.id.md).

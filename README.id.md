@@ -137,3 +137,21 @@ Anda boleh memakai, menyalin, mengubah, dan membagikan proyek, termasuk untuk bi
 Sebelum membuat rilis atau repo publik, ikuti [gerbang distribusi](docs/RELEASE.md). Riwayat pengembangan lokal sebelum `0.2.0` masih memuat lisensi lama dan tidak disiapkan untuk dipublikasikan.
 
 Semgrep merupakan dependency terpisah dengan lisensi upstream sendiri, bukan engine yang dibundel dalam skill.
+
+---
+
+## Alur visual
+
+![Alur review KodeWaspada dengan status bukti, scanner dan validasi lokal opsional, serta fix atau retest sesuai permintaan.](docs/assets/kodewaspada-workflow.svg)
+
+Coding assistant menerapkan skill sesuai scope: memetakan permukaan berisiko, menelusuri input melalui kontrol nyata hingga efek, mengklasifikasikan bukti, lalu melaporkan dampak dan cakupan. Validasi lokal mengikuti izin dan ketersediaan lingkungan uji. Fix serta Retest mengikuti mode yang diminta.
+
+Empat label bukti pada gambar berarti **terbukti di kode**, **terbukti lewat uji lokal**, **perlu verifikasi**, dan **gugur**; status tersebut terpisah dari tingkat risiko. Scanner JS/TS opsional menyumbangkan kandidat lewat tiga aturan: eksekusi shell, `eval` / `Function`, dan keluaran HTML mentah.
+
+### Contoh kolaborasi agent
+
+![Contoh pembagian kerja oleh host: koordinator, peran review dalam scope, pengembalian bukti, penyelarasan hasil, dan satu laporan berstatus bukti.](docs/assets/kodewaspada-agent-collaboration.svg)
+
+Gambar ini menunjukkan salah satu cara coding assistant host membagi pekerjaan bila mendukung beberapa agent. Peran, penjadwalan, dan akses alat disediakan host; KodeWaspada menyediakan panduan review dan standar bukti. Skill yang sama juga dapat digunakan oleh satu coding assistant.
+
+Lihat [panduan visual dan peta sumber](docs/VISUAL-WORKFLOW.id.md) untuk penjelasan teks, jalur Fix/Retest yang diminta, serta alur implementasi scanner. [English guide](docs/VISUAL-WORKFLOW.md).

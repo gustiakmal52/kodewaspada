@@ -1,0 +1,114 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="1140" viewBox="0 0 1120 1140" role="img" aria-labelledby="title desc">
+  <title id="title">KodeWaspada review workflow</title>
+  <desc id="desc">A host coding assistant scopes a read-only review, discovers risky surfaces, traces controllable input through controls to a sensitive operation and effect, classifies evidence, and reports impact and coverage. The optional three-rule JavaScript and TypeScript scanner supplies candidates. Authorized, available local tests supply observed evidence. Source-proven, locally tested, needs verification and dismissed are evidence labels, not successive stages or severity levels. A separately requested fix starts with a sufficiently supported finding, applies a bounded root-cause patch and runs regression and legitimate-use controls. Retest may start from an existing patch. Failed or blocked checks remain open.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#101c2e"/>
+      <stop offset="1" stop-color="#0b1020"/>
+    </linearGradient>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 1 1 L 9 5 L 1 9 Z" fill="#6ee7b7"/>
+    </marker>
+    <marker id="optional-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 1 1 L 9 5 L 1 9 Z" fill="#67d9ef"/>
+    </marker>
+    <style>
+      text { font-family: Arial, Helvetica, sans-serif; fill: #f1f5f9; }
+      .eyebrow { font-size: 13px; font-weight: 700; letter-spacing: 1.8px; fill: #6ee7b7; }
+      .title { font-size: 38px; font-weight: 700; letter-spacing: -0.6px; }
+      .subtitle { font-size: 18px; fill: #b6c5d6; }
+      .card { fill: #142236; stroke: #31445d; stroke-width: 1.5; }
+      .step { font-size: 24px; font-weight: 700; }
+      .body { font-size: 18px; fill: #c5d2e1; }
+      .small { font-size: 16px; fill: #b6c5d6; }
+      .optional { fill: #111f32; stroke: #416576; stroke-width: 1.5; stroke-dasharray: 5 5; }
+      .optional-title { font-size: 22px; font-weight: 700; }
+      .optional-tag { font-size: 13px; font-weight: 700; letter-spacing: 1.5px; fill: #67d9ef; }
+      .connector { fill: none; stroke: #6ee7b7; stroke-width: 2.3; marker-end: url(#arrow); }
+      .optional-connector { fill: none; stroke: #67d9ef; stroke-width: 2; stroke-dasharray: 5 5; marker-end: url(#optional-arrow); }
+      .pill-label { font-size: 18px; font-weight: 700; }
+      .fix-title { font-size: 20px; font-weight: 700; }
+    </style>
+  </defs>
+
+  <rect width="1120" height="1140" rx="24" fill="url(#background)"/>
+  <rect x="0.75" y="0.75" width="1118.5" height="1138.5" rx="23.25" fill="none" stroke="#293b53" stroke-width="1.5"/>
+  <path d="M 56 44 H 93" stroke="#6ee7b7" stroke-width="3" stroke-linecap="round"/>
+  <text x="108" y="49" class="eyebrow">KODEWASPADA / REVIEW WORKFLOW</text>
+  <text x="56" y="93" class="title">From code to evidence</text>
+  <text x="56" y="123" class="subtitle">A coding assistant applies the skill within your project and requested scope.</text>
+
+  <rect x="56" y="154" width="636" height="80" rx="14" class="card"/>
+  <rect x="56" y="172" width="4" height="44" rx="2" fill="#6ee7b7"/>
+  <text x="80" y="186" class="step">01  Scope the review</text>
+  <text x="80" y="213" class="body">Repo, branch or diff, goals and changes to preserve.</text>
+  <path d="M 374 234 V 259" class="connector"/>
+
+  <rect x="56" y="264" width="636" height="90" rx="14" class="card"/>
+  <text x="80" y="296" class="step">02  Discover risky surfaces</text>
+  <text x="80" y="324" class="body">Map entry points, sensitive assets and trust boundaries.</text>
+  <text x="80" y="345" class="small">For diffs, start with changed paths and related code.</text>
+  <path d="M 374 354 V 379" class="connector"/>
+
+  <rect x="56" y="384" width="636" height="116" rx="14" class="card"/>
+  <text x="80" y="417" class="step">03  Trace and challenge candidates</text>
+  <text x="80" y="446" class="body">Controllable input → validation and permissions</text>
+  <text x="80" y="472" class="body">→ sensitive operation → effect. Inspect real controls.</text>
+  <path d="M 374 500 V 525" class="connector"/>
+
+  <rect x="744" y="264" width="320" height="150" rx="14" class="optional"/>
+  <text x="766" y="290" class="optional-tag">OPTIONAL SCANNER</text>
+  <text x="766" y="322" class="optional-title">Three JS/TS taint rules</text>
+  <text x="766" y="349" class="small">Shell · eval/Function · raw HTML</text>
+  <text x="766" y="376" class="small">Returns candidates for review.</text>
+  <text x="766" y="397" class="small">Use for supported files only.</text>
+  <path d="M 744 367 H 718 V 447 H 697" class="optional-connector"/>
+
+  <rect x="744" y="472" width="320" height="170" rx="14" class="optional"/>
+  <text x="766" y="499" class="optional-tag">OPTIONAL VALIDATION</text>
+  <text x="766" y="531" class="optional-title">Local test + controls</text>
+  <text x="766" y="558" class="small">If authorized and available:</text>
+  <text x="766" y="586" class="small">execute a minimal local test</text>
+  <text x="766" y="608" class="small">with comparison controls.</text>
+  <path d="M 744 588 H 697" class="optional-connector"/>
+
+  <rect x="56" y="530" width="636" height="138" rx="14" fill="#102a2c" stroke="#365d59" stroke-width="1.5"/>
+  <text x="80" y="556" class="eyebrow" style="font-size:12px;letter-spacing:1.1px">EVIDENCE LABELS · SEVERITY IS SEPARATE</text>
+  <rect x="80" y="571" width="282" height="34" rx="8" fill="#163c38"/>
+  <text x="94" y="594" class="pill-label" style="fill:#8aefca">Source-proven</text>
+  <rect x="386" y="571" width="282" height="34" rx="8" fill="#14394a"/>
+  <text x="400" y="594" class="pill-label" style="fill:#8ce5f6">Locally tested</text>
+  <rect x="80" y="617" width="282" height="34" rx="8" fill="#3b3422"/>
+  <text x="94" y="640" class="pill-label" style="fill:#f8d889">Needs verification</text>
+  <rect x="386" y="617" width="282" height="34" rx="8" fill="#263747"/>
+  <text x="400" y="640" class="pill-label" style="fill:#c8d1dc">Dismissed</text>
+  <path d="M 374 668 V 695" class="connector"/>
+
+  <rect x="56" y="700" width="636" height="88" rx="14" class="card"/>
+  <text x="80" y="733" class="step">04  Report evidence and impact</text>
+  <text x="80" y="762" class="small">Locations, controls, prerequisites, actual tests and coverage gaps.</text>
+  <text x="744" y="722" class="small" style="fill:#6ee7b7;font-weight:700">Review stays read-only.</text>
+  <text x="744" y="751" class="small">Local evidence does not establish</text>
+  <text x="744" y="774" class="small">deployed production behavior.</text>
+
+  <rect x="56" y="830" width="1008" height="260" rx="16" fill="#13212e" stroke="#36534f" stroke-width="1.5"/>
+  <text x="80" y="861" class="eyebrow">WHEN FIX OR RETEST IS REQUESTED</text>
+  <text x="80" y="890" class="body">Fix starts with a sufficiently supported finding in the agreed scope.</text>
+
+  <rect x="80" y="913" width="280" height="76" rx="11" class="card"/>
+  <text x="97" y="943" class="fix-title">Bounded root-cause patch</text>
+  <text x="97" y="970" class="small">Add a focused regression test.</text>
+  <path d="M 360 951 H 411" class="connector"/>
+  <rect x="416" y="913" width="280" height="76" rx="11" class="card"/>
+  <text x="433" y="943" class="fix-title">Retest with controls</text>
+  <text x="433" y="970" class="small">Regression + legitimate use.</text>
+  <path d="M 696 951 H 747" class="connector"/>
+  <rect x="752" y="913" width="288" height="76" rx="11" class="card"/>
+  <text x="769" y="943" class="fix-title">Report actual result</text>
+  <text x="769" y="970" class="small">Passed, failed or unverified.</text>
+
+  <text x="80" y="1024" class="small">Retest request: start from an existing patch.</text>
+  <path d="M 407 1019 H 556 V 994" class="optional-connector"/>
+  <text x="80" y="1063" class="small">Failed or blocked retests remain open. Review findings alone do not trigger edits.</text>
+  <text x="56" y="1121" style="font-size:14px;fill:#91a4bb">Based on the skill instructions, fix-and-retest reference and optional scanner implementation.</text>
+</svg>

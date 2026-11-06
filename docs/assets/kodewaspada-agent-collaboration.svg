@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="962" viewBox="0 0 1120 962" role="img" aria-labelledby="title desc">
+  <title id="title">Example agent collaboration using KodeWaspada</title>
+  <desc id="desc">An example arrangement provided by a host assistant that supports delegation. A coordinator applies KodeWaspada, sets the review scope, and delegates focused tasks to surface mapping, input-flow review, and session and boundary review roles. Source evidence, controls, unknowns, and any authorized local test results return to the coordinator for reconciliation and evidence classification before reporting. Roles and parallelism depend on the host and task. KodeWaspada supplies review guidance; this diagram describes an example host arrangement rather than a bundled worker runtime.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#101c2e"/>
+      <stop offset="1" stop-color="#0b1020"/>
+    </linearGradient>
+    <marker id="task-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 1 1 L 9 5 L 1 9 Z" fill="#67d9ef"/>
+    </marker>
+    <marker id="return-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 1 1 L 9 5 L 1 9 Z" fill="#6ee7b7"/>
+    </marker>
+    <style>
+      text { font-family: Arial, Helvetica, sans-serif; fill: #f1f5f9; }
+      .eyebrow { font-size: 13px; font-weight: 700; letter-spacing: 1.8px; fill: #6ee7b7; }
+      .title { font-size: 38px; font-weight: 700; letter-spacing: -0.6px; }
+      .subtitle { font-size: 18px; fill: #b6c5d6; }
+      .tag { font-size: 13px; font-weight: 700; letter-spacing: 1.5px; fill: #67d9ef; }
+      .heading { font-size: 24px; font-weight: 700; }
+      .role-title { font-size: 22px; font-weight: 700; }
+      .body { font-size: 17px; fill: #c5d2e1; }
+      .small { font-size: 16px; fill: #b6c5d6; }
+      .task-path { fill: none; stroke: #67d9ef; stroke-width: 2.2; }
+      .task-end { fill: none; stroke: #67d9ef; stroke-width: 2.2; marker-end: url(#task-arrow); }
+      .return-path { fill: none; stroke: #6ee7b7; stroke-width: 2.2; }
+      .return-end { fill: none; stroke: #6ee7b7; stroke-width: 2.2; marker-end: url(#return-arrow); }
+    </style>
+  </defs>
+
+  <rect width="1120" height="962" rx="24" fill="url(#background)"/>
+  <rect x="0.75" y="0.75" width="1118.5" height="960.5" rx="23.25" fill="none" stroke="#293b53" stroke-width="1.5"/>
+  <path d="M 56 44 H 93" stroke="#6ee7b7" stroke-width="3" stroke-linecap="round"/>
+  <text x="108" y="49" class="eyebrow">KODEWASPADA / AGENT COLLABORATION</text>
+  <text x="56" y="93" class="title">One scope. Several focused reviews.</text>
+  <text x="56" y="123" class="subtitle">Example arrangement provided by the host assistant.</text>
+
+  <rect x="286" y="162" width="548" height="112" rx="15" fill="#12302f" stroke="#5ba994" stroke-width="1.6"/>
+  <text x="560" y="189" text-anchor="middle" class="eyebrow">HOST COORDINATOR</text>
+  <text x="560" y="222" text-anchor="middle" class="heading">Apply KodeWaspada to the task</text>
+  <text x="560" y="250" text-anchor="middle" class="body">Scope · review guidance · evidence standards</text>
+
+  <path d="M 560 274 V 316" class="task-path"/>
+  <path d="M 211 316 H 909" class="task-path"/>
+  <text x="666" y="301" class="small" style="fill:#8bdceb">Scoped read-only tasks</text>
+  <path d="M 211 316 V 347" class="task-end"/>
+  <path d="M 560 316 V 347" class="task-end"/>
+  <path d="M 909 316 V 347" class="task-end"/>
+
+  <rect x="56" y="352" width="310" height="160" rx="14" fill="#142236" stroke="#35526a" stroke-width="1.5"/>
+  <text x="80" y="380" class="tag">OPTIONAL ROLE 01</text>
+  <text x="80" y="414" class="role-title">Surface mapping</text>
+  <text x="80" y="450" class="small">Entry points, assets, stack</text>
+  <text x="80" y="474" class="small">and trust boundaries.</text>
+
+  <rect x="405" y="352" width="310" height="160" rx="14" fill="#142236" stroke="#35526a" stroke-width="1.5"/>
+  <text x="429" y="380" class="tag">OPTIONAL ROLE 02</text>
+  <text x="429" y="414" class="role-title">Input-flow review</text>
+  <text x="429" y="450" class="small">Controllable input, validation,</text>
+  <text x="429" y="474" class="small">sensitive operations and effects.</text>
+
+  <rect x="754" y="352" width="310" height="160" rx="14" fill="#142236" stroke="#35526a" stroke-width="1.5"/>
+  <text x="778" y="380" class="tag">OPTIONAL ROLE 03</text>
+  <text x="778" y="414" class="role-title">Session &amp; boundary</text>
+  <text x="778" y="440" class="role-title">review</text>
+  <text x="778" y="474" class="small">Identity, access checks and state.</text>
+
+  <path d="M 211 512 V 554 H 560" class="return-path"/>
+  <path d="M 909 512 V 554 H 560" class="return-path"/>
+  <path d="M 560 512 V 571" class="return-path"/>
+  <rect x="230" y="572" width="660" height="35" rx="9" fill="#10232d"/>
+  <text x="560" y="595" text-anchor="middle" class="small" style="fill:#9de6ca">Evidence, controls and unknowns return to the coordinator</text>
+  <path d="M 560 608 V 630" class="return-end"/>
+
+  <rect x="286" y="635" width="548" height="112" rx="15" fill="#12302f" stroke="#5ba994" stroke-width="1.6"/>
+  <text x="560" y="662" text-anchor="middle" class="eyebrow">HOST COORDINATOR</text>
+  <text x="560" y="695" text-anchor="middle" class="heading">Reconcile and classify evidence</text>
+  <text x="560" y="723" text-anchor="middle" class="body">Cross-check paths, controls, duplicates and missing context</text>
+  <path d="M 560 747 V 776" class="return-end"/>
+
+  <rect x="286" y="781" width="548" height="84" rx="14" fill="#142236" stroke="#31445d" stroke-width="1.5"/>
+  <text x="560" y="815" text-anchor="middle" class="heading">Evidence-classified report</text>
+  <text x="560" y="843" text-anchor="middle" class="body">Findings · dismissed hypotheses · coverage gaps</text>
+
+  <text x="56" y="912" class="subtitle">Roles and parallelism depend on the host and task.</text>
+  <text x="56" y="940" class="subtitle" style="fill:#6ee7b7">KodeWaspada supplies review guidance.</text>
+</svg>
